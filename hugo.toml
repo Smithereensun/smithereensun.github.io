@@ -29,14 +29,14 @@ timeZone = "Asia/Shanghai"
   email = "mailto:you@example.com"
 
 [[params.externalLinks]]
-  title = "Relay 站点 01"
-  description = "一个独立的站外入口，点击即可跳转访问。"
+  title = "Relay Hub"
+  description = "AI 中转站综合信息站，支持榜单浏览、站点检索和用户投稿。"
   url = "https://relay-esol.onrender.com/"
 
 [[params.externalLinks]]
-  title = "Relay 站点 02"
-  description = "第二个站外入口，保留为独立卡片，后续也方便继续扩展。"
-  url = "https://relay-esol.onrender.com/"
+  title = "学习猫"
+  description = "一个聚焦学习与知识整理的独立网站入口。"
+  url = "https://study-km9d.onrender.com/"
 
 [[menu.main]]
   name = "首页"
