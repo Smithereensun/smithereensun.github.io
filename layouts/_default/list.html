@@ -1,0 +1,28 @@
+{{ define "main" }}
+  <section class="page-hero">
+    <p class="eyebrow">{{ .Section | default "Archive" }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="page-lead">{{ . }}</p>
+    {{ end }}
+  </section>
+
+  {{ $paginator := .Paginate .Pages.ByDate.Reverse }}
+  <div class="card-grid">
+    {{ range $paginator.Pages }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </div>
+
+  {{ if gt $paginator.TotalPages 1 }}
+    <nav class="pagination" aria-label="分页">
+      {{ if $paginator.HasPrev }}
+        <a href="{{ $paginator.Prev.URL | relURL }}">上一页</a>
+      {{ end }}
+      <span>第 {{ $paginator.PageNumber }} / {{ $paginator.TotalPages }} 页</span>
+      {{ if $paginator.HasNext }}
+        <a href="{{ $paginator.Next.URL | relURL }}">下一页</a>
+      {{ end }}
+    </nav>
+  {{ end }}
+{{ end }}

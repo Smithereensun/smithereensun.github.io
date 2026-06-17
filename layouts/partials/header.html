@@ -1,0 +1,15 @@
+<header class="site-header">
+  <a class="brand" href="{{ "/" | relURL }}">
+    <span class="brand-mark">浮</span>
+    <span class="brand-copy">
+      <strong>{{ .Site.Title }}</strong>
+      <small>{{ .Site.Params.subtitle }}</small>
+    </span>
+  </a>
+
+  <nav class="nav">
+    {{ range .Site.Menus.main }}
+      <a class="nav-link" href="{{ .URL | relURL }}">{{ .Name }}</a>
+    {{ end }}
+  </nav>
+</header>

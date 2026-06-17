@@ -1,0 +1,49 @@
+baseURL = "https://smithereensun.github.io/"
+title = "浮光笔记"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+hasCJKLanguage = true
+enableRobotsTXT = true
+summaryLength = 28
+paginate = 6
+timeZone = "Asia/Shanghai"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  siteDescription = "一座安静、克制但有温度的个人博客。"
+  author = "Chen"
+  subtitle = "把灵感、技术和生活整理成可持续的积木。"
+  accent = "#ff6b4a"
+  heroEyebrow = "Personal Blog"
+  heroTitle = "写给未来自己的公开笔记"
+  heroLead = "用清晰的结构记录想法、技术和日常，把每一次输出都变成下一次成长的起点。"
+  primaryCTA = "浏览文章"
+  primaryCTAURL = "/posts/"
+  secondaryCTA = "了解我"
+  secondaryCTAURL = "/about/"
+  github = "https://github.com/Smithereensun/smithereensun.github.io"
+  email = "mailto:you@example.com"
+
+[[menu.main]]
+  name = "首页"
+  url = "/"
+  weight = 10
+
+[[menu.main]]
+  name = "文章"
+  url = "/posts/"
+  weight = 20
+
+[[menu.main]]
+  name = "关于"
+  url = "/about/"
+  weight = 30
+
+[[menu.main]]
+  name = "标签"
+  url = "/tags/"
+  weight = 40

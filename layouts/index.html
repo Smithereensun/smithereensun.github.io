@@ -1,0 +1,70 @@
+{{ define "main" }}
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">{{ .Site.Params.heroEyebrow }}</p>
+      <h1>{{ .Site.Params.heroTitle }}</h1>
+      <p class="hero-lead">{{ .Site.Params.heroLead }}</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="{{ .Site.Params.primaryCTAURL | relURL }}">{{ .Site.Params.primaryCTA }}</a>
+        <a class="button button-secondary" href="{{ .Site.Params.secondaryCTAURL | relURL }}">{{ .Site.Params.secondaryCTA }}</a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <div class="stat">
+        <span>文章</span>
+        <strong>{{ len (where .Site.RegularPages "Section" "posts") }}</strong>
+      </div>
+      <div class="stat">
+        <span>标签</span>
+        <strong>{{ len .Site.Taxonomies.tags }}</strong>
+      </div>
+      <div class="stat">
+        <span>风格</span>
+        <strong>安静 / 克制 / 有温度</strong>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section-grid">
+    <div class="section-heading">
+      <p class="eyebrow">Featured</p>
+      <h2>精选文章</h2>
+    </div>
+    {{ $posts := (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
+    {{ $featured := where $posts "Params.featured" true }}
+    {{ if gt (len $featured) 0 }}
+      <div class="card-grid card-grid--featured">
+        {{ range first 2 $featured }}
+          {{ partial "post-card.html" . }}
+        {{ end }}
+      </div>
+    {{ else }}
+      <div class="card-grid card-grid--featured">
+        {{ range first 2 $posts }}
+          {{ partial "post-card.html" . }}
+        {{ end }}
+      </div>
+    {{ end }}
+  </section>
+
+  <section class="section-grid">
+    <div class="section-heading">
+      <p class="eyebrow">Latest</p>
+      <h2>最新发布</h2>
+    </div>
+    <div class="card-grid">
+      {{ range first 6 $posts }}
+        {{ partial "post-card.html" . }}
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="note-banner">
+    <div>
+      <p class="eyebrow">Now Writing</p>
+      <h2>把每一次认真，都留在这里</h2>
+    </div>
+    <p>这个站点会持续积累文章、笔记和阶段复盘，慢慢长成一份可靠的个人档案。</p>
+  </section>
+{{ end }}

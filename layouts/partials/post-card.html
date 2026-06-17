@@ -1,0 +1,15 @@
+<a class="post-card" href="{{ .RelPermalink }}">
+  <div class="post-card__meta">
+    <span>{{ .Date.Format "2006-01-02" }}</span>
+    <span>{{ .ReadingTime }} min read</span>
+  </div>
+  <h3>{{ .Title }}</h3>
+  <p>{{ .Summary | plainify | truncate 140 }}</p>
+  <div class="post-card__footer">
+    {{ with .Params.tags }}
+      {{ range first 2 . }}
+        <span class="tag">{{ . }}</span>
+      {{ end }}
+    {{ end }}
+  </div>
+</a>
