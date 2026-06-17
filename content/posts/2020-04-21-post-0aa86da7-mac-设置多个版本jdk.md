@@ -1,5 +1,5 @@
 ---
-title: "Mac 设置多个版本JDK"
+title: "Mac 设置多个版本JDK"
 date: 2020-04-21
 description: "控制台： vim ~/.bash_profile 添加如下配置 export JAVA_13_HOME=/Library/Java/JavaVirtualMachines/jdk-13.0.2.jdk/Contents/Home export JAVA_8_HOME=/Library/Java/Ja"
 tags:

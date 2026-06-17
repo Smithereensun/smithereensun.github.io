@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import html
+import json
 import re
 import sys
 import hashlib
@@ -60,6 +61,7 @@ def parse_date(value: str) -> str:
 def clean_text(text: str) -> str:
     text = html.unescape(text)
     text = text.replace("\u3000", " ")
+    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -186,7 +188,7 @@ def import_one(url: str, lastmod: Optional[str]) -> Optional[Tuple[str, str]]:
     if not body:
         return None
 
-    title = extract_title(html_text)
+    title = clean_text(extract_title(html_text))
     description = extract_meta(html_text, "description") or strip_tags(body)[:180]
     date_match = re.search(r'property="article:published_time" content="([^"]+)"', html_text, re.I)
     if date_match:
