@@ -1,11 +1,6 @@
 {{ define "main" }}
-  {{ $posts := (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
-  {{ $featured := where $posts "Params.featured" true }}
-  {{ $lead := cond (gt (len $featured) 0) (index $featured 0) (index $posts 0) }}
-
-  <section class="cover-grid">
-    <article class="cover-hero">
-      <div class="cover-hero__label">Issue 01</div>
+  <section class="hero">
+    <div class="hero-copy">
       <p class="eyebrow">{{ .Site.Params.heroEyebrow }}</p>
       <h1>{{ .Site.Params.heroTitle }}</h1>
       <p class="hero-lead">{{ .Site.Params.heroLead }}</p>
@@ -13,26 +8,24 @@
         <a class="button button-primary" href="{{ .Site.Params.primaryCTAURL | relURL }}">{{ .Site.Params.primaryCTA }}</a>
         <a class="button button-secondary" href="{{ .Site.Params.secondaryCTAURL | relURL }}">{{ .Site.Params.secondaryCTA }}</a>
       </div>
-      <div class="cover-hero__footer">
-        <span>{{ len $posts }} 篇文章</span>
-        <span>{{ len .Site.Taxonomies.tags }} 个标签</span>
-        <span>每周更新</span>
+      <div class="hero-signature">
+        <span class="hero-signature__label">Latest note</span>
+        <strong>让内容像杂志，而不是像备忘录。</strong>
       </div>
-    </article>
+    </div>
 
-    <aside class="cover-rail">
+    <aside class="hero-panel">
       <div class="hero-panel__header">
         <span>Now</span>
         <strong>Build in public</strong>
       </div>
-      <div class="stat stat--accent">
-        <span>正在推荐</span>
-        <strong>{{ $lead.Title }}</strong>
-        <p>{{ $lead.Description }}</p>
-      </div>
       <div class="stat">
         <span>文章</span>
-        <strong>{{ len $posts }}</strong>
+        <strong>{{ len (where .Site.RegularPages "Section" "posts") }}</strong>
+      </div>
+      <div class="stat">
+        <span>标签</span>
+        <strong>{{ len .Site.Taxonomies.tags }}</strong>
       </div>
       <div class="stat">
         <span>风格</span>
@@ -41,53 +34,36 @@
     </aside>
   </section>
 
-  <section class="section-grid section-grid--editorial">
-    <div class="section-heading section-heading--split">
-      <div>
-        <p class="eyebrow">Featured</p>
-        <h2>精选文章</h2>
-      </div>
-      <p class="section-kicker">像杂志封面一样，先看最有分量的那篇。</p>
+  <section class="section-grid">
+    <div class="section-heading">
+      <p class="eyebrow">Featured</p>
+      <h2>精选文章</h2>
     </div>
-    <div class="feature-layout">
-      <a class="feature-story" href="{{ $lead.RelPermalink }}">
-        <span class="feature-story__eyebrow">Lead Story</span>
-        <h3>{{ $lead.Title }}</h3>
-        <p>{{ $lead.Description | default ($lead.Summary | plainify | truncate 160) }}</p>
-        <div class="feature-story__meta">
-          <span>{{ $lead.Date.Format "2006-01-02" }}</span>
-          <span>{{ $lead.ReadingTime }} min read</span>
-        </div>
-      </a>
-      <div class="feature-stack">
-        {{ range first 2 (after 1 $featured) }}
+    {{ $posts := (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
+    {{ $featured := where $posts "Params.featured" true }}
+    {{ if gt (len $featured) 0 }}
+      <div class="card-grid card-grid--featured">
+        {{ range first 2 $featured }}
           {{ partial "post-card.html" . }}
         {{ end }}
       </div>
-    </div>
+    {{ else }}
+      <div class="card-grid card-grid--featured">
+        {{ range first 2 $posts }}
+          {{ partial "post-card.html" . }}
+        {{ end }}
+      </div>
+    {{ end }}
   </section>
 
-  <section class="section-grid section-grid--latest">
-    <div class="section-heading section-heading--split">
-      <div>
-        <p class="eyebrow">Latest</p>
-        <h2>最新发布</h2>
-      </div>
-      <a class="section-link" href="{{ "/posts/" | relURL }}">查看全部</a>
+  <section class="section-grid">
+    <div class="section-heading">
+      <p class="eyebrow">Latest</p>
+      <h2>最新发布</h2>
     </div>
-    <div class="article-list">
-      {{ range first 5 $posts }}
-        <a class="article-row" href="{{ .RelPermalink }}">
-          <div class="article-row__meta">
-            <span>{{ .Date.Format "2006-01-02" }}</span>
-            <span>{{ .ReadingTime }} min</span>
-          </div>
-          <div class="article-row__content">
-            <h3>{{ .Title }}</h3>
-            <p>{{ .Description | default (.Summary | plainify | truncate 120) }}</p>
-          </div>
-          <div class="article-row__arrow">→</div>
-        </a>
+    <div class="card-grid">
+      {{ range first 6 $posts }}
+        {{ partial "post-card.html" . }}
       {{ end }}
     </div>
   </section>

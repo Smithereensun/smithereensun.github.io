@@ -1,34 +1,20 @@
 {{ define "main" }}
   <article class="article">
-    <div class="article-shell">
-      <header class="article-header">
-        <div class="article-header__topline">
-          <p class="eyebrow">{{ .Section }}</p>
-          <span>{{ .Date.Format "2006-01-02" }}</span>
-        </div>
-        <h1>{{ .Title }}</h1>
-        {{ with .Description }}
-          <p class="page-lead">{{ . }}</p>
+    <header class="article-header">
+      <p class="eyebrow">{{ .Section }}</p>
+      <h1>{{ .Title }}</h1>
+      {{ with .Description }}
+        <p class="page-lead">{{ . }}</p>
+      {{ end }}
+      <div class="article-meta">
+        <span>{{ .Date.Format "2006-01-02" }}</span>
+        <span>{{ .ReadingTime }} min read</span>
+        {{ with .Params.tags }}
+          <span>{{ delimit . " / " }}</span>
         {{ end }}
-        <div class="article-meta">
-          <span>{{ .ReadingTime }} min read</span>
-          {{ with .Params.tags }}
-            <span>{{ delimit . " / " }}</span>
-          {{ end }}
-        </div>
-      </header>
-
-      <aside class="article-aside">
-        <div class="article-aside__card">
-          <span>Reading mode</span>
-          <strong>High-end reader</strong>
-        </div>
-        <div class="article-aside__card">
-          <span>Tags</span>
-          <strong>{{ with .Params.tags }}{{ delimit . " · " }}{{ end }}</strong>
-        </div>
-      </aside>
-    </div>
+      </div>
+      <div class="article-header__rule"></div>
+    </header>
 
     <div class="article-body">
       {{ .Content }}
