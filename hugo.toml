@@ -28,6 +28,16 @@ timeZone = "Asia/Shanghai"
   github = "https://github.com/Smithereensun/smithereensun.github.io"
   email = "mailto:you@example.com"
 
+[[params.externalLinks]]
+  title = "Relay 站点 01"
+  description = "一个独立的站外入口，点击即可跳转访问。"
+  url = "https://relay-esol.onrender.com/"
+
+[[params.externalLinks]]
+  title = "Relay 站点 02"
+  description = "第二个站外入口，保留为独立卡片，后续也方便继续扩展。"
+  url = "https://relay-esol.onrender.com/"
+
 [[menu.main]]
   name = "首页"
   url = "/"
