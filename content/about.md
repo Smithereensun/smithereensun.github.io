@@ -15,8 +15,3 @@ description: "一个喜欢写代码、做笔记、观察生活的人。"
 - 项目复盘和思考方法
 - 读书、工具和效率笔记
 - 少量生活感受和阶段总结
-
-## 联系方式
-
-- GitHub: [yourname](https://github.com/yourname)
-- Email: [you@example.com](mailto:you@example.com)

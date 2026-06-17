@@ -3,9 +3,6 @@
     <header class="article-header">
       <p class="eyebrow">{{ .Section }}</p>
       <h1>{{ .Title }}</h1>
-      {{ with .Description }}
-        <p class="page-lead">{{ . }}</p>
-      {{ end }}
       <div class="article-meta">
         <span>{{ .Date.Format "2006-01-02" }}</span>
         <span>{{ .ReadingTime }} min read</span>
@@ -13,6 +10,9 @@
           <span>{{ delimit . " / " }}</span>
         {{ end }}
       </div>
+      {{ with .Description }}
+        <p class="page-lead">{{ . }}</p>
+      {{ end }}
       <div class="article-header__rule"></div>
     </header>
 
