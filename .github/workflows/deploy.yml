@@ -27,17 +27,8 @@ jobs:
           hugo-version: "0.125.7"
           extended: true
 
-      - name: Compute base URL
-        shell: bash
-        run: |
-          if [[ "${{ github.event.repository.name }}" == "${{ github.repository_owner }}.github.io" ]]; then
-            echo "BASE_URL=https://${{ github.repository_owner }}.github.io/" >> "$GITHUB_ENV"
-          else
-            echo "BASE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> "$GITHUB_ENV"
-          fi
-
       - name: Build
-        run: hugo --gc --minify --baseURL "$BASE_URL"
+        run: hugo --gc --minify --baseURL "https://smithereensun.github.io/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
