@@ -3,6 +3,7 @@ import argparse
 import html
 import re
 import sys
+import hashlib
 import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -39,6 +40,10 @@ def slugify(text: str) -> str:
     text = re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "-", text)
     text = re.sub(r"-+", "-", text).strip("-")
     return text or "post"
+
+
+def short_hash(text: str) -> str:
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:8]
 
 
 def parse_date(value: str) -> str:
@@ -200,7 +205,7 @@ def import_one(url: str, lastmod: Optional[str]) -> Optional[Tuple[str, str]]:
     if not tags:
         tags = ["cnblogs"]
 
-    filename = f"{date_str}-{post_id}-{slugify(title)}.md"
+    filename = f"{date_str}-{post_id}-{short_hash(url)}-{slugify(title)[:60]}.md"
     out_path = POST_DIR / filename
     out_path.write_text(
         build_markdown(title, date_str, description or title, tags, url, body),
