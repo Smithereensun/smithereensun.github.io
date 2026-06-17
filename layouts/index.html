@@ -8,9 +8,17 @@
         <a class="button button-primary" href="{{ .Site.Params.primaryCTAURL | relURL }}">{{ .Site.Params.primaryCTA }}</a>
         <a class="button button-secondary" href="{{ .Site.Params.secondaryCTAURL | relURL }}">{{ .Site.Params.secondaryCTA }}</a>
       </div>
+      <div class="hero-signature">
+        <span class="hero-signature__label">Latest note</span>
+        <strong>让内容像杂志，而不是像备忘录。</strong>
+      </div>
     </div>
 
     <aside class="hero-panel">
+      <div class="hero-panel__header">
+        <span>Now</span>
+        <strong>Build in public</strong>
+      </div>
       <div class="stat">
         <span>文章</span>
         <strong>{{ len (where .Site.RegularPages "Section" "posts") }}</strong>

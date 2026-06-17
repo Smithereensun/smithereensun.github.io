@@ -5,6 +5,10 @@
     {{ with .Description }}
       <p class="page-lead">{{ . }}</p>
     {{ end }}
+    <div class="page-hero__stats">
+      <span>{{ len .Pages }} 篇内容</span>
+      <span>{{ len .Site.Taxonomies.tags }} 个标签</span>
+    </div>
   </section>
 
   {{ $paginator := .Paginate .Pages.ByDate.Reverse }}
