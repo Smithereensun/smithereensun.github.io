@@ -1,0 +1,180 @@
+---
+title: "Mysql 常用数据类型"
+date: 2023-05-31
+description: "什么是数据类型 数据类型是指列、存储过程参数、表达式和局部变量的数据特征，它决定了数据的存储格式，代表了不同的信息类型，有一些数据是要存储为数字的，数字当中有些是要存储为整数、小数、日期型等.... 1字节=8位(bit) 常见的数据类型 整数型 类型 大小 范围(有符号) 范围(无符号unsign"
+tags:
+  - "SQL"
+source: "cnblogs"
+source_url: "https://www.cnblogs.com/chenyanbin/p/13975117.html"
+---
+
+<h1 style="text-align: center">什么是数据类型</h1>
+<p>　　数据类型是指列、存储过程参数、表达式和局部变量的数据特征，它决定了数据的存储格式，代表了不同的信息类型，有一些数据是要存储为数字的，数字当中有些是要存储为整数、小数、日期型等....</p>
+<p>　　<strong><span style="color: rgba(255, 0, 0, 1)">1字节=8位(bit)</span></strong></p>
+<h1 style="text-align: center">常见的数据类型</h1>
+<h2>整数型</h2>
+<table border="0">
+<tbody>
+<tr>
+<td>类型</td>
+<td>大小</td>
+<td>范围(有符号)</td>
+<td>范围(无符号unsigned)</td>
+<td>用途</td>
+</tr>
+<tr>
+<td>tinyint</td>
+<td>1字节</td>
+<td>(-128,127)</td>
+<td>(0,255)</td>
+<td>小整数值</td>
+</tr>
+<tr>
+<td>smaillint</td>
+<td>2字节</td>
+<td>(-32768,32767)</td>
+<td>(0,65535)</td>
+<td>大整数值</td>
+</tr>
+<tr>
+<td>mediumint</td>
+<td>3字节</td>
+<td>(-8388608,8388607)</td>
+<td>(0,16777215)</td>
+<td>大整数值</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4字节</td>
+<td>(-2147483648,2147483647)</td>
+<td>(0,4294967295)</td>
+<td>大整数值</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>8字节</td>
+<td>(-9223372036854775808,9223372036854775807)</td>
+<td>(0,18446744073709551615)</td>
+<td>极大整数值</td>
+</tr>
+</tbody>
+</table>
+<h2>浮点型</h2>
+<table border="0">
+<tbody>
+<tr>
+<td>类型</td>
+<td>大小</td>
+<td>精度</td>
+<td>备注</td>
+</tr>
+<tr>
+<td>float(m,d)</td>
+<td>4字节</td>
+<td>单精度浮点型</td>
+<td>m代表总个数，d代表小数位</td>
+</tr>
+<tr>
+<td>double(m,d)</td>
+<td>8字节</td>
+<td>双精度浮点型</td>
+<td>m代表总个数，d代表小数位</td>
+</tr>
+</tbody>
+</table>
+<h2>定点型</h2>
+<table border="0">
+<tbody>
+<tr>
+<td>类型</td>
+<td>大小</td>
+<td>备注</td>
+</tr>
+<tr>
+<td>decimal(m,d)</td>
+<td>依赖于m和d的值</td>
+<td>m代表总个数，d代表小数位</td>
+</tr>
+</tbody>
+</table>
+<h2>字符串类型</h2>
+<table border="0">
+<tbody>
+<tr>
+<td>类型</td>
+<td>大小</td>
+<td>用途</td>
+</tr>
+<tr>
+<td>char</td>
+<td>0-255字节</td>
+<td>定长字符串</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>0-65535字节</td>
+<td>定长字符串</td>
+</tr>
+<tr>
+<td>tinytext</td>
+<td>0-255字节</td>
+<td>短文本字符串</td>
+</tr>
+<tr>
+<td>text</td>
+<td>0-65535字节</td>
+<td>长文本数据</td>
+</tr>
+<tr>
+<td>mediumtext</td>
+<td>0-16777215字节</td>
+<td>中等长度文本数据</td>
+</tr>
+<tr>
+<td>longtext</td>
+<td>0-4294967295字节</td>
+<td>极大文本数据</td>
+</tr>
+</tbody>
+</table>
+<h2>时间型</h2>
+<table border="0">
+<tbody>
+<tr>
+<td>类型</td>
+<td>大小</td>
+<td>格式</td>
+<td>备注</td>
+</tr>
+<tr>
+<td>date</td>
+<td>3</td>
+<td>yyyy-MM-dd</td>
+<td>存储日期值</td>
+</tr>
+<tr>
+<td>time</td>
+<td>3</td>
+<td>HH:mm:ss</td>
+<td>存储时分秒</td>
+</tr>
+<tr>
+<td>year</td>
+<td>1</td>
+<td>yyyy</td>
+<td>存储年</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>8</td>
+<td>yyyy-MM-dd HH:mm:ss</td>
+<td>存储日期+时间</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>4</td>
+<td>yyyy-MM-dd HH:mm:ss</td>
+<td>存储日期+时间，可作时间戳</td>
+</tr>
+</tbody>
+</table>
