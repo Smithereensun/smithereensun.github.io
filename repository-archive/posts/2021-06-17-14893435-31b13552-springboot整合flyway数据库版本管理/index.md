@@ -1,0 +1,154 @@
+{
+
+  "title": "SpringBoot整合Flyway数据库版本管理",
+  "date": "2021-06-17",
+  "description": "项目结构 添加依赖 pom.xml application.properties 演示 打印flyway执行日志",
+  "tags": [
+    "Spring Boot",
+    "Spring"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/14893435.html"
+
+}
+
+# 项目结构
+
+![](./images/images/img_001_1b9b4ec38f7f.png)
+
+# 添加依赖
+
+```text
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+```
+
+![](./images/images/img_002_8f900a89c634.gif)
+![](./images/images/img_003_961ddebeb323.gif)
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.12.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>spring-boot-flyway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>spring-boot-flyway</name>
+    <description>springboot整合flyway数据库版本迁移工具</description>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+pom.xml
+
+# application.properties
+
+```text
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/self_test2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+spring.datasource.username=root
+spring.datasource.password=root
+# flyway config
+# 迁移脚本的位置，默认db/migration
+spring.flyway.locations=classpath:db/migration
+# 迁移文件的前缀，默认为V
+spring.flyway.sql-migration-prefix=V
+# 迁移脚本的文件名分隔符，默认__
+spring.flyway.sql-migration-separator=__
+# 迁移脚本的后缀，默认为.sql
+spring.flyway.sql-migration-suffixes=.sql
+# 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.
+spring.flyway.baseline-on-migrate=true
+```
+
+# 演示
+
+![](./images/images/img_004_7b7bd7e1d6ab.gif)
+
+# 打印flyway执行日志
+
+```text
+logging.level.org.flywaydb=debug
+```
+
+```text
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/self_test2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+spring.datasource.username=root
+spring.datasource.password=root
+# flyway config
+# 迁移脚本的位置，默认db/migration
+spring.flyway.locations=classpath:db/migration
+# 迁移文件的前缀，默认为V
+spring.flyway.sql-migration-prefix=V
+# 迁移脚本的文件名分隔符，默认__
+spring.flyway.sql-migration-separator=__
+# 迁移脚本的后缀，默认为.sql
+spring.flyway.sql-migration-suffixes=.sql
+# 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.
+spring.flyway.baseline-on-migrate=true
+logging.level.org.flywaydb=debug
+```

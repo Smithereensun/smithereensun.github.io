@@ -1,0 +1,98 @@
+{
+
+  "title": "Claude code入门",
+  "date": "2026-04-19",
+  "description": "什么是 Claude Code？ Claude Code 是 Anthropic 公司推出的一款 AI 编程助手 https://claude.ai https://claude.com/download 环境准备 nodeJs https://nodejs.org/ https://nodejs.",
+  "tags": [
+    "AI",
+    "Claude"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/19891034/learnClaudeCode"
+
+}
+
+# 什么是 Claude Code？
+
+　　Claude Code 是 Anthropic 公司推出的一款 AI 编程助手
+
+- [https://claude.ai](https://claude.ai)
+- [https://claude.com/download](https://claude.com/download)
+
+#  环境准备
+
+## nodeJs
+
+- [https://nodejs.org/](https://nodejs.org/)
+- [https://nodejs.org/zh-cn/download](https://nodejs.org/zh-cn/download)
+
+## git
+
+- [https://git-scm.com/install/mac](https://git-scm.com/install/mac)
+
+## 安装 Claude Code
+
+windows
+
+```text
+打开命令行安装
+
+npm install -g @anthropic-ai/claude-code
+```
+
+mac
+
+```text
+打开终端
+
+npm install -g @anthropic-ai/claude-code
+```
+
+## 验证是否安装成功
+
+![image](./images/images/img_001_c20f9e0f51ec.png)
+
+## 安装CC switch
+
+- 仓库地址：[https://github.com/farion1231/cc-switch/](https://github.com/farion1231/cc-switch/)
+- 下载地址：[https://github.com/farion1231/cc-switch/releases](https://github.com/farion1231/cc-switch/releases)
+
+![image](./images/images/img_002_e6caebee04c2.png)
+
+### CC Switch中配置不同模型
+
+- deepseek：[https://platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys)
+- 其他：[https://api.lingyaai.cn/](https://api.lingyaai.cn/)
+- CC Switch推荐
+
+![image](./images/images/img_003_d26fdfa8fbad.png)
+
+### 设置供应商
+
+![generateCode](./images/images/img_004_230900d85162.gif)
+
+### 切换模型
+
+　　配置完成后，在 Claude Code 对话中输入 `/model `切换模型。
+
+![generateCode](./images/images/img_005_9bfad3b364ec.gif)
+
+### Claude code常用命令
+
+<table> <tbody> <tr> <td>命令</td> <td>功能</td> <td>使用场景</td> </tr> <tr> <td>/help</td> <td>显示所有可用斜杠命令列表</td> <td>忘记某个命令时随手查询</td> </tr> <tr> <td>/init</td> <td>在项目根目录生成 CLAUDE.md 记忆文件</td> <td>首次打开新项目时执行，让 AI 记住项目规范</td> </tr> <tr> <td>/model</td> <td>切换 AI 模型（Sonnet/Opus/Haiku）</td> <td>根据任务复杂度选择合适的模型</td> </tr> <tr> <td>/cost</td> <td>显示当前会话的 Token 消耗和费用</td> <td>监控 API 使用成本，避免超额</td> </tr> <tr> <td>/context</td> <td>显示当前上下文窗口占用百分比</td> <td>查看是否接近 200,000 token 上限</td> </tr> <tr> <td>/compact</td> <td>压缩对话历史，释放上下文空间</td> <td>会话超过 30 分钟或出现上下文警告时使用</td> </tr> <tr> <td>/clear</td> <td>完全清空对话历史，从头开始</td> <td>切换到完全不同的任务时使用</td> </tr> <tr> <td>/memory</td> <td>编辑 CLAUDE.md 记忆文件</td> <td>会话中途添加编码规范或项目规则</td> </tr> <tr> <td>/todos</td> <td>显示持久化任务列表</td> <td>跨会话跟踪待办事项</td> </tr> </tbody> </table>
+
+# 编译器中安装插件
+
+## vscode
+
+![image](./images/images/img_006_3967d1acd7da.png)
+
+#### 演示
+
+![generateCode](./images/images/img_007_79235a5cd476.gif)
+
+注：切换完模型，需要重启vscode
+
+# 安装Ghostty终端
+
+地址：[https://github.com/ghostty-org/ghostty](https://github.com/ghostty-org/ghostty)
