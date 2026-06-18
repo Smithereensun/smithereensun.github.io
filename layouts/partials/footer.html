@@ -12,7 +12,10 @@
 </footer>
 <script>
   (() => {
-    const input = document.querySelector("[data-search-input]");
+    const searchBox = document.querySelector("[data-search-box]");
+    if (!searchBox) return;
+
+    const input = searchBox.querySelector("[data-search-input]");
     const items = Array.from(document.querySelectorAll("[data-search-item]"));
     const resultItems = Array.from(document.querySelectorAll("[data-search-result-item]"));
     if (!input || !items.length) return;
@@ -57,5 +60,6 @@
     };
 
     input.addEventListener("input", update);
+    update();
   })();
 </script>
