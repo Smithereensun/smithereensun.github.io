@@ -25,8 +25,14 @@
       <span>阈值 {{ $threshold }}MB</span>
     </div>
     <div class="search-box" data-search-box>
-      <label class="search-box__label" for="archive-search">按标题搜索归档文章</label>
-      <input id="archive-search" class="search-box__input" type="search" placeholder="输入归档文章标题关键词" data-search-input />
+      <div class="search-box__intro">
+        <span class="search-box__eyebrow">Archive Search</span>
+        <label class="search-box__label" for="archive-search">按标题搜索归档文章</label>
+      </div>
+      <div class="search-box__field">
+        <span class="search-box__icon" aria-hidden="true"></span>
+        <input id="archive-search" class="search-box__input" type="search" placeholder="输入归档文章标题关键词" data-search-input />
+      </div>
     </div>
   </section>
 

@@ -11,8 +11,14 @@
       <span>{{ len .Site.Taxonomies.tags }} 个标签</span>
     </div>
     <div class="search-box" data-search-box>
-      <label class="search-box__label" for="post-search">按标题搜索文章</label>
-      <input id="post-search" class="search-box__input" type="search" placeholder="输入文章标题关键词" data-search-input />
+      <div class="search-box__intro">
+        <span class="search-box__eyebrow">Article Search</span>
+        <label class="search-box__label" for="post-search">按标题搜索文章</label>
+      </div>
+      <div class="search-box__field">
+        <span class="search-box__icon" aria-hidden="true"></span>
+        <input id="post-search" class="search-box__input" type="search" placeholder="输入文章标题关键词" data-search-input />
+      </div>
     </div>
   </section>
 
