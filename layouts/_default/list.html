@@ -10,7 +10,15 @@
       <span>{{ len .Pages }} 篇内容</span>
       <span>{{ len .Site.Taxonomies.tags }} 个标签</span>
     </div>
-    <div class="search-box" data-search-box>
+  </section>
+
+  <section class="search-slab" data-search-box>
+    <div class="search-slab__copy">
+      <span class="search-slab__eyebrow">Search</span>
+      <h2>搜索这页文章</h2>
+      <p>直接按标题筛选当前页面里的文章，查找会更快。</p>
+    </div>
+    <div class="search-box search-box--inline">
       <div class="search-box__intro">
         <span class="search-box__eyebrow">Article Search</span>
         <label class="search-box__label" for="post-search">按标题搜索文章</label>
