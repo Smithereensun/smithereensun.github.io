@@ -1,0 +1,240 @@
+{
+
+  "title": "Mysql binlog备份数据及恢复数据，学会这个，我在也不怕删库跑路啦~",
+  "date": "2020-11-23",
+  "description": "导读 我一直都主张，技多不压身(**没有学不会的技术，只有不学习的人**)，多学一项技能，未来就少求人一次。网上经常听到xxx删库跑路，万一真的遇到了，相信通过今天的学习，也能将数据再恢复回来~~~ 当然啦，备份数据/还原数据也是挺重要的，可以看我另一篇：点我直达 如果感觉这样还不安全，可以考虑授予",
+  "tags": [
+    "MySQL"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/14022086.html"
+
+}
+
+# 导读
+
+　　我一直都主张，技多不压身(**没有学不会的技术，只有不学习的人**)，多学一项技能，未来就少求人一次。网上经常听到xxx删库跑路，万一真的遇到了，相信通过今天的学习，也能将数据再恢复回来~~~
+
+　　当然啦，备份数据/还原数据也是挺重要的，可以看我另一篇：[点我直达](https://www.cnblogs.com/chenyanbin/p/14020293.html)
+
+　　如果感觉这样还不安全，可以考虑授予用户权限：[点我直达](https://www.cnblogs.com/chenyanbin/p/14003024.html)
+
+# 介绍
+
+　　记录着mysql数据库中的一些增删改操作(**没有查询**)
+
+## 功能
+
+1. 数据复制(**主从复制**)
+2. 数据恢复
+
+## 注意事项
+
+　　开启二进制日志会有性能的消耗！！！
+
+## 查看二进制日志是否开启
+
+```text
+查看是否开启：show variables like 'log_bin%';
+```
+
+![](./images/images/img_001_cb5638cfcbcf.png)
+
+## 开启二进制日志
+
+　　修改my.cnf文件
+
+```text
+[mysqld]
+datadir=/usr/local/mysql/data
+port = 3306
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+symbolic-links=0
+max_connections=400
+innodb_file_per_table=1
+#表名大小写不明感，敏感为
+lower_case_table_names=1
+# skip-grant-tables
+log-bin=/usr/local/mysql/log_bin_data/mysql-bin
+server-id=1
+```
+
+```text
+切换：cd /usr/local/mysql/
+创建目录(用于存放二进制日志)：mkdir log_bin_data
+
+注意：
+1、log_bin_data必须要有mysql权限
+2、修改权限：chown -R mysql:mysql /usr/local/mysql/log_bin_data
+
+修改my.cnf： vim /usr/local/mysql/my.cnf
+
+在[mysqld]下添加
+log-bin=/usr/local/mysql/log_bin_data/mysql-bin
+server-id=1
+
+修改完之后，一定要重启mysql服务：service mysql restart
+```
+
+![](./images/images/img_002_75b3e814fbd0.png)
+
+![](./images/images/img_003_374bebe2b900.png)
+
+　　此时继续查看二进制日志是否开启，现在可以看到已经开启
+
+![](./images/images/img_004_0960d4c04f39.png)
+
+### 查看binlog日志列表
+
+```text
+show master logs;
+```
+
+![](./images/images/img_005_73cd9d67903e.png)
+
+### 刷新二进制日志
+
+　　刷新/重启mysql服务，都会在加一个binlog日志文件
+
+```text
+flush logs;
+```
+
+![](./images/images/img_006_3e6080a4e338.gif)
+
+### 重置(清空)日志文件
+
+　　有时候感觉日志文件没啥用，还占用空间，可以使用下面命令重置日志文件
+
+```text
+登录mysql：mysql -uroot -proot
+删除binlog：reset master
+```
+
+![](./images/images/img_007_b2f787bc6094.gif)
+
+# 二进制备份
+
+　　备份好二进制日志文件之后，往表中插入一条记录，然后将数据库给删掉，等会使用二进制日志恢复数据库
+
+```text
+描述：备份本地db2库，并压缩存放到/mysql_data_back下
+
+切换：cd /usr/local/mysql/bin
+
+语法：./mysqldump -u用户 -p密码 -F --databases 数据库 | gzip > 路径+文件名
+
+备份：./mysqldump -uroot -proot -F --databases db2 | gzip > /mysql_data_back/db2.sql.gz
+
+新增一条记录：
+INSERT INTO `db2`.`nba_player`(`id`, `countryEn`, `teamName`, `birthDay`, `country`, `teamCityEn`, `code`, `displayAffiliation`, `displayName`, `schoolType`, `teamConference`, `teamConferenceEn`, `weight`, `teamCity`, `playYear`, `jerseyNo`, `teamNameEn`, `draft`, `displayNameEn`, `birthDayStr`, `heightValue`, `position`, `age`, `playerId`) VALUES (999999, 'Croatia', '快船', 858661200000, '克罗地亚', 'LA', 'ivica_zubac', 'Croatia', '伊维察 祖巴茨', '', '西部', 'Western', '108.9 公斤', '洛杉矶', 3, '40', 'Clippers', 2016, 'Ivica Zubac', '1997-03-18', 2.16, '中锋', 22, '1627826');
+
+```
+
+![](./images/images/img_008_af9a28460bbc.gif)
+
+![](./images/images/img_009_c277d2973f55.gif)
+
+刚才的所有操作，都会记录在binlog日志文件中！
+
+![](./images/images/img_010_ab4ae513b974.png)
+
+# binlog恢复数据
+
+　　刚才我们备份数据库之前，新增一条记录，id=9999，恢复回去之后，如果有这条记录，说明我们恢复成功啦
+
+## 查看binlog里的日志
+
+```text
+语法：./mysqlbinlog binlog日志文件
+
+切换：/usr/local/mysql/bin
+
+查看binlog日志 :./mysqlbinlog /usr/local/mysql/log_bin_data/mysql-bin.000002
+```
+
+![](./images/images/img_011_ab48debc4ed0.gif)
+
+　　如果查看binlog日志报错，解决方法
+
+```text
+添加：--no-defaults参数
+./mysqlbinlog --no-defaults /usr/local/mysql/log_bin_data/mysql-bin.000002
+```
+
+## 将binlog日志转换普通文件
+
+```text
+语法：./mysqlbinlog --no-defaults --base64-output=DECODE-ROWS -v binlog日志文件 > 导出文件路径
+
+./mysqlbinlog --no-defaults --base64-output=DECODE-ROWS -v /usr/local/mysql/log_bin_data/mysql-bin.000002 > /mysql_data_back/bin-log.sql
+```
+
+![](./images/images/img_012_0c11fa11664e.gif)
+
+## 恢复数据方式
+
+### 根据binlog日志的时间
+
+![](./images/images/img_013_0e5ab2a3b1e4.png)
+
+### 根据binlog的位置
+
+![](./images/images/img_014_d614cc59729a.png)
+
+## 找到删除库的行
+
+```text
+./mysqlbinlog --no-defaults ../log_bin_data/mysql-bin.000002 | cat -n |grep -iw 'drop'
+
+./mysqlbinlog --no-defaults ../log_bin_data/mysql-bin.000002 | cat -n | sed -n '行数1,行数2p'
+
+./mysqlbinlog --no-defaults ../log_bin_data/mysql-bin.000002 | cat -n | sed -n '59,70p'
+```
+
+![](./images/images/img_015_0416e6e419d1.gif)
+
+## 开始恢复数据
+
+### 先恢复数据库
+
+　　先将原先备份的数据库给备份回来
+
+```text
+切换： cd /mysql_data_back
+
+解压： gunzip -d db2.sql.gz
+
+恢复数据：mysql -uroot -proot -h 127.0.0.1 < /mysql_data_back/db2.sql
+```
+
+![](./images/images/img_016_6da11d237eb4.gif)
+
+　　此时**数据库已经恢复回来**，但是**新增的那条记录没有恢复回来**(id=9999)
+
+![](./images/images/img_017_877cb9e7c754.gif)
+
+### 恢复binlog
+
+![](./images/images/img_018_25d53d3c9e71.png)
+
+```text
+语法：./mysqlbinlog --no-defaults --set-charset=utf8 --stop-position="停止位置" binlog日志 | mysql -u用户 -p密码
+```
+
+```text
+./mysqlbinlog --no-defaults --set-charset=utf8 --stop-position="761" /usr/local/mysql/log_bin_data/mysql-bin.000002 | mysql -uroot -proot
+
+恢复某一段记录
+./mysqlbinlog --no-defaults --set-charset=utf8 --start-position="开始坐标"** --stop-position="结束坐标" | mysql -uroot -proot**
+```
+
+![](./images/images/img_019_bd4d373c125e.gif)
+
+![](./images/images/img_020_5fe8526e8e6a.gif)
+
+## 备注
+
+　　本次案例，我**先备份一次数据库**，**然后新增一条记录**，**再把数据库给删了**，我**先恢复数据库**(恢复的数据库中是没新增的这条记录)，通过**binlog将新增的记录****，回滚到数据库中**！
+
+# 搞定

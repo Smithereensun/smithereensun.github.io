@@ -1,0 +1,59 @@
+{
+
+  "title": "AI 编辑器Qoder",
+  "date": "2026-02-07",
+  "description": "Qoder客户端安装** Qoder客户端下载与安装（Windows/macOS） Qoder官方网站https://qoder.com/download 验证环境 登录编译器 一键生成Spring Boot后端与Vue 3前端项目结构 对话框中输入提示词，生成代码 Idea集成Qoder",
+  "tags": [
+    "笔记"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/19561633"
+
+}
+
+# **Qoder客户端安装**
+
+Qoder客户端下载与安装（Windows/macOS）
+
+-
+
+Qoder官方网站[https://qoder.com/download](https://qoder.com/download)
+
+# 验证环境
+
+```text
+# 1. 验证Java环境（Spring Boot 3.x需JDK 17+）
+java -version
+# 期望输出：包含 “java version “17.x.x”
+
+# 2. 验证Maven（项目管理）
+mvn -v
+# 期望输出：包含 “Apache Maven 3.6+” 版本信息
+
+# 3. 验证Node.js（Vue开发）
+node --version
+# 期望输出：包含 “v18.x.x” 或更高
+
+# 4. 验证npm包管理器
+npm -v
+```
+
+![image](./images/images/img_001_eddbc47976e9.png)
+
+# 登录编译器
+
+![image](./images/images/img_002_93a9b7d1045d.png)
+
+# 一键生成Spring Boot后端与Vue 3前端项目结构
+
+对话框中输入提示词，生成代码
+
+```text
+为我创建一个前后端分离的全栈项目。后端使用Spring Boot 3.x和Java 21，包含一个简单的REST API。前端使用Vue 3和TypeScript，并集成Element Plus UI库。请生成标准的项目结构、基础配置文件和示例代码。
+```
+
+![generateCode](./images/images/img_003_bb7bd193c871.gif)
+
+# Idea集成Qoder
+
+![image](./images/images/img_004_5b8b05e2860e.png)

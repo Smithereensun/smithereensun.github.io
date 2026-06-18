@@ -1,0 +1,291 @@
+{
+
+  "title": "Mysql数据安全备份",
+  "date": "2020-11-22",
+  "description": "数据安全备份的意义 在出现意外的时候(硬盘损坏、断点、黑客攻击)，以便数据的恢复 导出生产的数据以便研发人员或者测试人员测试学习 高权限的人员那操作失误导致数据丢失，以便恢复 备份类型 完全备份：对整个数据库的备份 部分备份：对数据进行部分备份(一张或多张表) 增量备份：是以上一次备份为基础来备份变",
+  "tags": [
+    "MySQL"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/14020293.html"
+
+}
+
+# 数据安全备份的意义
+
+1. 在出现意外的时候(硬盘损坏、断点、黑客攻击)，以便数据的恢复
+2. 导出生产的数据以便研发人员或者测试人员测试学习
+3. 高权限的人员那操作失误导致数据丢失，以便恢复
+
+## 备份类型
+
+- 完全备份：对整个数据库的备份
+- 部分备份：对数据进行部分备份(一张或多张表)
+
+  - 增量备份：是以上一次备份为基础来备份变更数据
+  - 差异备份：是以第一次完全备份为基础来备份变更数据
+
+![](./images/images/img_001_71e955b73bfa.png)
+
+## 备份方式
+
+- 逻辑备份：直接生成sql语句，在恢复数据的时候执行sql语句
+- 物理备份：复制相关库文件，进行数据备份(**my.cnf指向的数据存放目录**)
+
+### 区别
+
+1. 逻辑备份效率低，恢复数据效率低，节约空间
+2. 物理备份浪费空间，备份数据效率快
+
+## 备份场景
+
+- 热备份：备份时，不影响数据库的读写操作
+- 温备份：备份时，可以读，不能写
+- 冷备份：备份时，关闭mysql服务，不能进行任何读写操作
+
+# Mysqldump备份(跨机器)
+
+## 单库语法
+
+```text
+备份基础语法：
+mysqldump -u用户 -hip -p密码 数据库名 表名 | 压缩方式 > 绝对路径+文件名
+
+```
+
+### 跨机器备份
+
+```text
+跨机器备份：
+
+备份描述：mac本上安装了mysql数据库(172.20.10.2)，使用自搭Linux(172.20.10.4)机器上的mysql备份mac本上的nba库，并使用压缩文件方式，备份至：/mysql_data_back下
+来到linux的mysql安装目录(172.20.10.4)：
+创建目录：mkdir /mysql_data_back
+切换：cd /usr/local/mysql/bin
+备份：./mysqldump -uroot -proot -h172.20.10.2 nba | gzip > /mysql_data_back/nba.sql.gz
+```
+
+![](./images/images/img_002_b5f8984c6f4c.gif)
+
+### 本机备份
+
+```text
+本机备份：
+
+备份描述：linux(自搭)，备份本就上的db1库，并使用压缩方式，备份至：/mysql_data_back下
+备份：./mysqldump -uroot -proot db1 | gzip > /mysql_data_back/db1.sql.gz
+```
+
+![](./images/images/img_003_143243b825b2.gif)
+
+## 备份库中的某张表
+
+```text
+语法：./mysqldump -uroot -proot -h172.20.10.2 nba | gzip > /mysql_data_back/nba.sql.gz
+
+备份描述：在Linux(自搭，172.20.10.4)上，远程备份mac本(172.20.10.2)nba(库)的nba_player(表)
+在原来的基础上，nba(库名) 在追加表名即可
+./mysqldump -uroot -proot -h172.20.10.2 nba nba_player | gzip > /mysql_data_back/nba-nba_player.sql.gz
+```
+
+![](./images/images/img_004_f5fd3bff6c28.gif)
+
+## 备份多库
+
+```text
+语法：./mysqldump -u用户 -p密码 --databases 库1 库2 | gzip > 绝对路径+文件名
+备份描述：备份本机的：db1、db2两个库
+备份：./mysqldump -uroot -proot --databases db1 db2 | gzip > /mysql_data_back/db1-db2.sql.gz
+```
+
+![](./images/images/img_005_1619e04e8469.gif)
+
+### 注意
+
+　　只备份表结构，数据没备份！
+
+## 备份全库
+
+　　描述：如果远程服务器上数据库较多的话，可以使用全库备份
+
+```text
+语法：
+./mysqldump -uroot -proot -all --databases | gzip > /mysql_data_back/all.sql.gz
+```
+
+# Mysql数据的恢复
+
+　　备份的数据，不加--databases是没有创建库语句的！
+
+```text
+先备份数据：
+./mysqldump -uroot -proot --databases db1 | gzip > /mysql_data_back/db1.sql.gz
+
+删除库：
+drop database db1;
+
+还原数据：
+2、解压gz文件：gunzip -d db1.sql.gz
+1、登录数据库：mysql -uroot -proot -h 127.0.0.1 < /mysql_data_back/db1.sql
+```
+
+![](./images/images/img_006_16590a3ed298.gif)
+
+![](./images/images/img_007_1084b53e9f48.gif)
+
+也可以指定数据库后，在恢复数据
+
+```text
+语法：
+    mysql -u用户 -p密码 -h ip地址 数据库 < 绝对路径+文件名
+示例：mysql -uroot -proot -h 127.0.0.1 issdb_1 < /mysql_data_back/issdb_1.sql
+```
+
+# 查看Mysql数据库源文件
+
+## 方式一
+
+```text
+登录mysql：mysql -uroot -proot
+查看：show variables like 'datadir%';
+===========================
+mysql> show variables like 'datadir%';
++---------------+------------------------+
+| Variable_name | Value                  |
++---------------+------------------------+
+| datadir       | /usr/local/mysql/data/ |
++---------------+------------------------+
+1 row in set (0.01 sec)
+```
+
+## 方式二
+
+　　直接查看my.cnf文件即可
+
+![](./images/images/img_008_07faf94be086.png)
+
+# 借助Navicat，备份&恢复
+
+![](./images/images/img_009_e4c40eced487.gif)
+
+# 华为云RDS数据库备份恢复
+
+　　恢复从华为云RDS备份的xxx.qp文件
+
+## 先入华为云下载备份文件
+
+![](./images/images/img_010_976067940c98.png)
+
+## 将下载的qp文件上传至Linux服务器中
+
+### 安装XtraBackup
+
+　　mysql 5.7
+
+```text
+yum -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+yum -y  install percona-xtrabackup-24
+yum -y  install qpress
+
+innobackupex -version  ###如果出现如下提示表示安装成功
+```
+
+　　mysql 8.0
+
+```text
+yum -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+yum -y  install percona-xtrabackup-80
+yum -y  install qpress
+
+xtrabackup -version  ###如果出现如下提示表示安装成功
+```
+
+### 将qp文件解压(mysql 5.7)
+
+```text
+1、创建一个临时目录backupdir
+mkdir backupdir
+
+2、解压qp文件
+xbstream -x -p 4 < ./0d506e3e350091ef1f55c.qp -C ./backupdir/
+# 解析qp文件
+innobackupex --parallel 4 --decompress ./backupdir
+# 删除.qp，只留mysql数据文件
+find ./backupdir/ -name '*.qp' | xargs rm -f
+# 应用日志
+innobackupex --apply-log ./backupdir
+
+```
+
+将qp文件解压(mysql 8.0)
+
+```text
+1、创建一个临时目录backupdir
+mkdir backupdir
+
+2、解压qp文件
+xbstream -x -p 4 < ./0d506e3e350091ef1f55c.qp -C ./backupdir/
+# 解析qp文件
+xtrabackup  --parallel 4 --decompress --target-dir=/backupdir/
+# 删除.qp，只留mysql数据文件
+find ./backupdir/ -name '*.qp' | xargs rm -f
+# 应用日志
+xtrabackup --prepare --apply-log-only --target-dir=/backupdir/
+```
+
+　　注意：在服务器上直接将backupdir文件里的文件打成压缩包：**tar -czvf data.tar.gz backupdir/ **下载到本地，并将本地mysql的数据目录备份一下，将下载的压缩包，放到mysql数据目录即可（**备份数据恢复时，先将mysql停用**）
+
+![](./images/images/img_011_d0cc4f4f6fee.png)
+
+#### 特别注意的是：比如原先本地服务器密码是：123456；当将服务器下载下来的备份文件覆盖原有mysql数据目录时，此时本地mysql的密码是覆盖后的密码(即备份那台mysql的密码)！！！！
+
+1
+
+## XtraBackup备份自建mysql 8.0
+
+安装mysql8.0：[点我直达](https://www.cnblogs.com/chenyanbin/p/mysql8.html)
+
+运行时报错
+
+```text
+failed to execute query 'LOCK INSTANCE FOR BACKUP' : 1227 (42000) Access denied; you need (at least one of) the BACKUP_ADMIN privilege(s) for this operation
+```
+
+解决办法
+
+```text
+grant BACKUP_ADMIN on *.* to 'root'@'%';
+FLUSH PRIVILEGES;
+```
+
+备份
+
+```text
+-- MySQL 8.0 备份
+xtrabackup  --user=root --password=Root1234. --port=3306 --host=47.116.143.16 --socket=/var/lib/mysql/mysql.sock --backup --datadir=/var/lib/mysql --target-dir=/backups
+
+user：用户名
+password：密码
+port：端口号
+host：mysql地址
+socket：mysql中socket地址
+--backup：xtrabackup备份
+datadir：mysql数据存储路径
+target：导出备份文件路径
+```
+
+还原
+
+- 停止mysql
+- 将备份文件直接覆盖mysql 数据存储路径
+- 修改数据存储路径权限：**chmod 777 ***
+- 重启mysql
+
+# 最简单快速备份-冷备份
+
+　　停用mysql服务，然后将data目录下面的所有文件进行拷贝保存，需要恢复时，则将目录拷贝到需要恢复的机器即可。
+
+## 优缺点
+
+- 优点：备份速度快
+- 缺点：需要停用mysql服务，生产环境停用服务不太现实~
