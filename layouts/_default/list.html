@@ -1,4 +1,5 @@
 {{ define "main" }}
+  {{ $allPages := .Pages.ByDate.Reverse }}
   <section class="page-hero">
     <p class="eyebrow">{{ .Section | default "Archive" }}</p>
     <h1>{{ .Title }}</h1>
@@ -9,17 +10,32 @@
       <span>{{ len .Pages }} 篇内容</span>
       <span>{{ len .Site.Taxonomies.tags }} 个标签</span>
     </div>
+    <div class="search-box" data-search-box>
+      <label class="search-box__label" for="post-search">按标题搜索文章</label>
+      <input id="post-search" class="search-box__input" type="search" placeholder="输入文章标题关键词" data-search-input />
+    </div>
   </section>
 
-  {{ $paginator := .Paginate .Pages.ByDate.Reverse }}
-  <div class="card-grid">
+  {{ $paginator := .Paginate $allPages }}
+  <div class="card-grid" data-search-grid>
     {{ range $paginator.Pages }}
       {{ partial "post-card.html" . }}
     {{ end }}
   </div>
 
+  <div class="search-results" data-search-results hidden>
+    {{ range $allPages }}
+      <a class="search-result" href="{{ .RelPermalink }}" data-search-result-item data-search-title="{{ .Title | lower }}">
+        <strong>{{ .Title }}</strong>
+        <span>{{ .Date.Format "2006-01-02" }}</span>
+      </a>
+    {{ end }}
+  </div>
+
+  <p class="search-empty" data-search-empty hidden>没有找到匹配的文章标题，换个关键词试试。</p>
+
   {{ if gt $paginator.TotalPages 1 }}
-    <nav class="pagination" aria-label="分页">
+    <nav class="pagination" aria-label="分页" data-search-pagination>
       {{ if $paginator.HasPrev }}
         <a href="{{ $paginator.Prev.URL | relURL }}">上一页</a>
       {{ end }}

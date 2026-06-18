@@ -10,3 +10,52 @@
   </div>
   <p class="copyright">© {{ now.Year }} {{ .Site.Params.author }}</p>
 </footer>
+<script>
+  (() => {
+    const input = document.querySelector("[data-search-input]");
+    const items = Array.from(document.querySelectorAll("[data-search-item]"));
+    const resultItems = Array.from(document.querySelectorAll("[data-search-result-item]"));
+    if (!input || !items.length) return;
+
+    const empty = document.querySelector("[data-search-empty]");
+    const pagination = document.querySelector("[data-search-pagination]");
+    const grid = document.querySelector("[data-search-grid]");
+    const results = document.querySelector("[data-search-results]");
+
+    const update = () => {
+      const keyword = input.value.trim().toLowerCase();
+      if (!keyword) {
+        items.forEach((item) => {
+          item.hidden = false;
+        });
+        resultItems.forEach((item) => {
+          item.hidden = false;
+        });
+        if (grid) grid.hidden = false;
+        if (results) results.hidden = true;
+        if (empty) empty.hidden = true;
+        if (pagination) pagination.hidden = false;
+        return;
+      }
+
+      let visibleCount = 0;
+      resultItems.forEach((item) => {
+        const title = item.getAttribute("data-search-title") || "";
+        const visible = title.includes(keyword);
+        item.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+
+      items.forEach((item) => {
+        item.hidden = true;
+      });
+
+      if (grid) grid.hidden = true;
+      if (results) results.hidden = false;
+      if (empty) empty.hidden = visibleCount !== 0;
+      if (pagination) pagination.hidden = true;
+    };
+
+    input.addEventListener("input", update);
+  })();
+</script>

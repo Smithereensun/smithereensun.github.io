@@ -1,0 +1,61 @@
+{{ define "main" }}
+  {{ $payload := dict }}
+  {{ with .RawContent }}
+    {{ $match := findRE "(?s)```json\\n(.*?)\\n```" . 1 }}
+    {{ with index $match 0 }}
+      {{ $json := replaceRE "(?s)^```json\\n|\\n```$" "" . }}
+      {{ $payload = unmarshal $json }}
+    {{ end }}
+  {{ end }}
+
+  {{ $items := index $payload "items" | default (slice) }}
+  {{ $totalAssetFiles := index $payload "asset_files" | default 0 }}
+  {{ $totalAssetBytes := index $payload "asset_bytes" | default 0 }}
+  {{ $threshold := index $payload "threshold_mb" | default 5 }}
+  {{ $totalSizeMB := div (float $totalAssetBytes) 1048576.0 }}
+
+  <section class="page-hero page-hero--archive">
+    <p class="eyebrow">Repository Archive</p>
+    <h1>{{ .Title }}</h1>
+    <p class="page-lead">这些文章资源较大，所以不放进博客正文流。每篇归档都会保留完整目录，包括 Markdown 和配套图片文件。</p>
+    <div class="page-hero__stats">
+      <span>{{ len $items }} 篇归档</span>
+      <span>{{ $totalAssetFiles }} 个资源文件</span>
+      <span>{{ printf "%.1fMB" $totalSizeMB }} 归档资源</span>
+      <span>阈值 {{ $threshold }}MB</span>
+    </div>
+    <div class="search-box" data-search-box>
+      <label class="search-box__label" for="archive-search">按标题搜索归档文章</label>
+      <input id="archive-search" class="search-box__input" type="search" placeholder="输入归档文章标题关键词" data-search-input />
+    </div>
+  </section>
+
+  <section class="archive-list" data-search-grid>
+    {{ range $items }}
+      {{ $sizeMB := div (float (index . "asset_bytes")) 1048576.0 }}
+      <a class="archive-item" href="{{ index . "github_url" }}" target="_blank" rel="noopener noreferrer" data-search-item data-search-title="{{ lower (index . "title") }}">
+        <div class="archive-item__meta">
+          <span>{{ index . "date" }}</span>
+          <span>{{ printf "%.1fMB" $sizeMB }}</span>
+        </div>
+        <h3>{{ index . "title" }}</h3>
+        <p>{{ index . "path" }}</p>
+        <div class="archive-item__footer">
+          <span class="tag">{{ index . "asset_files" }} 个资源</span>
+          <span class="archive-item__cta">打开归档目录</span>
+        </div>
+      </a>
+    {{ end }}
+  </section>
+
+  <div class="search-results" data-search-results hidden>
+    {{ range $items }}
+      <a class="search-result" href="{{ index . "github_url" }}" target="_blank" rel="noopener noreferrer" data-search-result-item data-search-title="{{ lower (index . "title") }}">
+        <strong>{{ index . "title" }}</strong>
+        <span>{{ index . "date" }}</span>
+      </a>
+    {{ end }}
+  </div>
+
+  <p class="search-empty" data-search-empty hidden>没有找到匹配的归档标题，换个关键词试试。</p>
+{{ end }}

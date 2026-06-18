@@ -15,7 +15,7 @@ CONTENT_DIR = ROOT / "content" / "posts"
 STATIC_ASSET_DIR = ROOT / "static" / "imported" / "posts"
 REPOSITORY_ARCHIVE_DIR = ROOT / "repository-archive" / "posts"
 REPOSITORY_ARCHIVE_PAGE = ROOT / "content" / "repository-archive" / "_index.md"
-REPOSITORY_BLOB_BASE = "https://github.com/Smithereensun/smithereensun.github.io/blob/main/repository-archive/posts"
+REPOSITORY_TREE_BASE = "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts"
 LIGHT_POST_MAX_ASSET_MB = 5
 
 DEFAULT_TAGS = {
@@ -250,17 +250,27 @@ def ensure_posts_index() -> None:
 def write_repository_archive_page(rows: list[dict]) -> None:
     REPOSITORY_ARCHIVE_PAGE.parent.mkdir(parents=True, exist_ok=True)
 
+    archive_payload = {
+        "threshold_mb": LIGHT_POST_MAX_ASSET_MB,
+        "count": len(rows),
+        "asset_files": sum(row["asset_files"] for row in rows),
+        "asset_bytes": sum(row["asset_bytes"] for row in rows),
+        "items": rows,
+    }
+
     lines = [
         "---",
         'title: "仓库归档"',
         'description: "这些文章内容较大，不在博客正文中展示，统一放在 GitHub 仓库中归档查看。"',
+        "layout: repository-archive",
         "---",
         "",
         "这些文章因为图片或资源体积较大，没有放进博客正文页面。",
-        "你仍然可以在 GitHub 仓库里查看完整 Markdown 归档。",
+        "你仍然可以在 GitHub 仓库里查看完整归档目录，里面包含 Markdown 和图片等配套资源。",
         "",
-        f"- 归档阈值：单篇图片资源大于 `{LIGHT_POST_MAX_ASSET_MB}MB`",
-        f"- 当前归档数量：`{len(rows)}` 篇",
+        "```json",
+        json.dumps(archive_payload, ensure_ascii=False, indent=2),
+        "```",
         "",
     ]
 
@@ -318,15 +328,25 @@ def import_posts() -> tuple[int, int, int]:
             imported += 1
             continue
 
-        archive_path = REPOSITORY_ARCHIVE_DIR / f"{file_base}.md"
-        archive_path.write_text(front_matter + body, encoding="utf-8")
+        archive_dir = REPOSITORY_ARCHIVE_DIR / file_base
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+        archive_md_path = archive_dir / "index.md"
+        archive_body = rewrite_asset_paths(body, f"./images")
+        archive_md_path.write_text(front_matter + archive_body, encoding="utf-8")
+
+        if src_images.exists():
+            archive_images = archive_dir / "images"
+            shutil.copytree(src_images, archive_images)
+
         repository_rows.append(
             {
                 "title": title,
                 "date": date_str,
                 "asset_bytes": asset_bytes,
                 "asset_files": asset_files,
-                "github_url": f"{REPOSITORY_BLOB_BASE}/{archive_path.name}",
+                "github_url": f"{REPOSITORY_TREE_BASE}/{file_base}",
+                "path": f"repository-archive/posts/{file_base}",
             }
         )
         repository_only += 1
