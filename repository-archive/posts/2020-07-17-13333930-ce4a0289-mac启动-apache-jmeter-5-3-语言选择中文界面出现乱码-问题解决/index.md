@@ -1,0 +1,42 @@
+{
+
+  "title": "mac启动 Apache JMeter 5.3 语言选择中文界面出现乱码 问题解决",
+  "date": "2020-07-17",
+  "description": "问题重现 问题修复 出现这个问题，是因为，**语言与外观不兼容导致**，**语言**选“**中文**”，**外观**选“**Metal**” 细心的你，可能发现，为啥要重启2次呢？？?第一次设置完语言后，在设置外观，发现菜单不能选择，第二次重启后，才可以正常操作，估计是个bug 刚才那样只是暂时性中",
+  "tags": [
+    "Mac"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/13333930.html"
+
+}
+
+# 问题重现
+
+![](./images/images/img_001_80c39ec4b70d.gif)
+
+# 问题修复
+
+　　出现这个问题，是因为，**语言与外观不兼容导致**，**语言**选“**中文**”，**外观**选“**Metal**”
+
+![](./images/images/img_002_c4fc1b1730fc.gif)
+
+![](./images/images/img_003_2542f91a12f8.gif)
+
+　　细心的你，可能发现，为啥要重启2次呢？？?第一次设置完语言后，在设置外观，发现菜单不能选择，第二次重启后，才可以正常操作，估计是个bug
+
+　　刚才那样只是暂时性中文显示，若想永久显示中文，请看下面
+
+# 永久性中文显示
+
+位置：apache-jmeter-5.3/bin/jmeter.properties
+
+**修改第39行，设置为language=zh_CN**
+
+![](./images/images/img_004_28406f95a319.png)
+
+**修改1085行，设置为sampleresult.default.encoding=UTF-8**
+
+![](./images/images/img_005_6302c7872265.png)
+
+　　对你有小小帮助的话，记得点个推荐哟，不要白嫖哟～～～
