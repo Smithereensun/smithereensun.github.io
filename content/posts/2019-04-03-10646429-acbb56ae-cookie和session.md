@@ -4,7 +4,7 @@
   "date": "2019-04-03",
   "description": "cookie的工作原理是：由服务器产生内容，浏览器收到请求后保存在本地；当浏览器再次访问时，浏览器会自动带上cookie，这样服务器就能通过cookie的内容来判断这个是“谁”了。但是由于cookie本身最大支持4096字节，以及cookie本身保存在客户端，可能被拦截或窃取，因此就需要有一种新的东",
   "tags": [
-    "Django"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/10646429.html"

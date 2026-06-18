@@ -4,7 +4,7 @@
   "date": "2020-05-12",
   "description": "场景，往A表插入数据时，A表和B表是同一类型的状态下，A表中累计的值，不能超过B表中的值(**注：往数据库插入时，不能批量执行事务！**)，利用触发器before insert update，监控状态，若超过B表中的值，抛异常",
   "tags": [
-    "SQL"
+    "Oracle"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12874467.html"

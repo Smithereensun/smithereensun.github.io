@@ -4,7 +4,8 @@
   "date": "2019-10-10",
   "description": "平时没怎么注意，今天用Eclipse自动生成Set Get方法时提示错误，错误信息如下： The operation is not applicable to the current selection.Select a field which is not declared as type var",
   "tags": [
-    "JAVA"
+    "Java",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11651363.html"

@@ -5,7 +5,7 @@
   "description": "导读 最近负责消息网关，里面有个短信模板导入功能，因为不同模板编号对应不同参数，导入后的数据定时发送，涉及到Excel中列名不固定问题，于是想根据列名+值，组合成一个大JSON，具体代码如下。 引入依赖 Excel监听器 控制器 注：已经组装好动态列名数组，具体业务逻辑，需自行实现 Excel模板 ",
   "tags": [
     "Spring Boot",
-    "Easy Excel"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14715074.html"

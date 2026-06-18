@@ -4,7 +4,7 @@
   "date": "2019-11-25",
   "description": "java接口文件 xml文件 错误信息 解决问题 该问题由以下几点导致的 、传递参数时，参数没传对，参数格式：#{xxx}，要和java接口类中的形参相同 、select标签返回的int类型，与数据库中的money类型对应不上(**博主遇到这个问题，最后排查是数据类型二边没对应上，哈哈**)",
   "tags": [
-    "JAVA"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11927686.html"

@@ -4,7 +4,7 @@
   "date": "2019-12-01",
   "description": "刚开始学习springmvc的童鞋，相信很多都需要过这种情况，报错信息如下 毕竟项目是一点点搭建起来的，项目从无到有，很有可能是缺少依赖导致的，需要额外添加以下三个包",
   "tags": [
-    "JAVA"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11968364.html"

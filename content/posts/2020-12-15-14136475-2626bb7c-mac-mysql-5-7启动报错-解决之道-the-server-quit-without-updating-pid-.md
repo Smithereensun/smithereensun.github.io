@@ -4,8 +4,8 @@
   "date": "2020-12-15",
   "description": "导读 晚上捣鼓数据库的时候，将mysql服务停止下，然后就死活启动不起来，这下可把我急坏了，自己数据库上有好多自己的个人项目，错误信息如下 网上百度一大堆，比如 /usr/local/mysql/data目录下必须为空 my.cnf中，必须指定存放mysql数据库的目录，在[mysqld]下设置：d",
   "tags": [
-    "Mac系统",
-    "SQL"
+    "MySQL",
+    "Mac"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14136475.html"

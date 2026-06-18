@@ -4,7 +4,8 @@
   "date": "2019-12-12",
   "description": "pom.xml依赖如下 问题解答 上述scope配置了Junit可用的位置，test表示只能在src下的test文件夹下面才可以使用** 解决办法 去掉scope配置就可以 解决后的依赖包修改为如下",
   "tags": [
-    "JAVA"
+    "Spring",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12027738.html"

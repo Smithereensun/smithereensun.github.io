@@ -4,8 +4,7 @@
   "date": "2024-08-26",
   "description": "创建2个项目 springboot-cloud-config（作配置中心） springboot-cloud-client（客户端） springboot-cloud-config（工程） 注意：2个项目springboot版本：2.4.0** 添加依赖 配置文件 启动配置中心服务 启动类上加：@E",
   "tags": [
-    "Spring Boot",
-    "Spring Cloud"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/18380101/spring-cloud-config"

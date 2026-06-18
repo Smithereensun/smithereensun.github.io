@@ -4,8 +4,7 @@
   "date": "2020-09-24",
   "description": "项目搭建 目录结构 pom.xml application.properties 注入分页 MybatisPlusConfig.java dao层 NbaTestDao.java 实体类 NbaTest.java 启动类上扫描dao 数据库表字段 测试类 搞定~",
   "tags": [
-    "MyBatis",
-    "JAVA"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13722629.html"

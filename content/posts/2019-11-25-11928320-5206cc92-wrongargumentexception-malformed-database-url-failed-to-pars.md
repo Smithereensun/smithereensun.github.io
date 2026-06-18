@@ -4,8 +4,7 @@
   "date": "2019-11-25",
   "description": "连接mysql库报的异常信息： 解决方法 连接的mysql是8.0.18版本，首先更新mysql驱动到对应版本 原先的url 修改后的url",
   "tags": [
-    "JAVA",
-    "Spring"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11928320.html"

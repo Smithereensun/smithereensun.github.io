@@ -4,7 +4,6 @@
   "date": "2020-07-16",
   "description": "快速创建SpringBoot+Spring+Mybatis项目 https://start.spring.io 删除pom中mysql依赖的runtime pom.xml中添加druid依赖 数据库连接配置文件 application.properties 启动类上添加扫描注解 UserContro",
   "tags": [
-    "ssm",
     "Spring Boot",
     "Spring"
   ],

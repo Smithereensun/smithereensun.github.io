@@ -4,7 +4,7 @@
   "date": "2019-10-12",
   "description": "错误截图 分析原因 首先，给定的异常提示信息并不精准，有多个错误原因都会抛出该异常。mybatis出现这个问题，通常是由Mapper interface和对应的xml文件的定义对应不上引起的，这时就需要仔细检查对比包名、xml中的namespace、接口中的方法名称等是否对应。我之前就因为称忘记在x",
   "tags": [
-    "JAVA"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11657868.html"

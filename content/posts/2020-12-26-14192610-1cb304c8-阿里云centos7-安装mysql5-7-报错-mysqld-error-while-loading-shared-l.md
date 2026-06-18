@@ -4,8 +4,8 @@
   "date": "2020-12-26",
   "description": "在阿里云服务器Centos7中安装mysql5.7，解压数据库初始化后，报错 检查是否安装libaio 若不存在，安装这个包即可",
   "tags": [
-    "Linux",
-    "SQL"
+    "MySQL",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14192610.html"

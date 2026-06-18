@@ -4,7 +4,7 @@
   "date": "2019-07-31",
   "description": "一、路由规则 、可以创建多条路由规则，每条路由的name属性不相同 、路由规则有优先级，最上面的路由规则优先级越高 App_Start文件下的：RouteConfig.cs 二、路由调试工具 当为我们的应用程序注册多个路由后，由于注册不当，得不到预期的结果。为什么会发生这种情况，请求具体走了哪个路由",
   "tags": [
-    "MVC"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11279902.html"

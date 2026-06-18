@@ -4,7 +4,7 @@
   "date": "2020-03-09",
   "description": "问题描述 解决办法 查看编译环境的JDk版本是否一致 Idea的菜单 Build,Execution,Deployment-Compliler-Java Complier的jdk版本是13 看下菜单File-Project Structure下的Project和modules的编译环境是jdk13",
   "tags": [
-    "IDE"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12452552.html"

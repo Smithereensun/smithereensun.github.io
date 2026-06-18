@@ -4,7 +4,7 @@
   "date": "2020-03-07",
   "description": "创作不易，转载请注明出处！！！ 效果 修改：ext-extend.js源码 在最后面添加3行，重写方法 代码拷贝区 修改：ux-all.js 我这里把js压缩过的代码，格式化过，格式地址：http://lzw.me/pages/jsbeautify/ 修改NumericFiltert提示信息(也就是",
   "tags": [
-    "JavaScript"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12431909.html"

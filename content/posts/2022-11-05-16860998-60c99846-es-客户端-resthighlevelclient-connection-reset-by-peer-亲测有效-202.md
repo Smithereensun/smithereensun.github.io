@@ -4,7 +4,7 @@
   "date": "2022-11-05",
   "description": "导读 最新公司ES集群老出现连接关闭，进而导致查询|写入ES时报错，报错日志显示如下 优化&解决 因为这个项目是助农app（抖音+淘宝，杂交版app），app首页下拉获取最新推荐视频，需要通过第三方**极光**拉取推荐视频，存入本地数据库mysql后；一次拉取20条，然后通过线程池异步写入ES，大概",
   "tags": [
-    "ElasticSearch7.8.1"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/16860998.html"

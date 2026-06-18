@@ -4,7 +4,7 @@
   "date": "2020-08-14",
   "description": "导读 在开发JAVA服务器端代码时，我们会遇到对外部传来的参数合法性进行验证，而hibernate-validator提供了一些常用的参数校验注解，我们可以拿来使用。 引入maven依赖 在Model中定义要校验的字段：** 定义Validation工具类** 在代码中调用工具类进行参数校验：** ",
   "tags": [
-    "JAVA"
+    "Java"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13500650.html"

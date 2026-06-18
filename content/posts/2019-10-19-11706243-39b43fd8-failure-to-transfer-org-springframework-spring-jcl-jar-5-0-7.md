@@ -4,7 +4,7 @@
   "date": "2019-10-19",
   "description": "错误信息： Failure to transfer org.springframework.boot:spring-boot-maven-plugin:pom:1.5.4.RELEASE from https://repo.maven.apache.org/maven2 was cached in ",
   "tags": [
-    "JAVA"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11706243.html"

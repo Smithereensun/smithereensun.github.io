@@ -4,7 +4,7 @@
   "date": "2020-07-20",
   "description": "网盘地址 navicat15破解版",
   "tags": [
-    "SQL"
+    "MySQL"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13344570.html"

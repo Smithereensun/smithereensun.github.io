@@ -4,9 +4,7 @@
   "date": "2019-11-30",
   "description": "简介 在SpringMVC 中，控制器Controller 负责处理由DispatcherServlet 分发的请求，它把用户请求的数据经过业务处理层处理之后封装成一个Model ，然后再把该Model 返回给对应的View 进行展示。 示例 不适用注解修饰 返回ModelAndView contr",
   "tags": [
-    "Spring",
-    "JAVA",
-    "Spring MVC"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11961019.html"

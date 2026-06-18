@@ -4,7 +4,7 @@
   "date": "2020-07-15",
   "description": "application.properties数据库连接字符串",
   "tags": [
-    "配置文件"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13308835.html"

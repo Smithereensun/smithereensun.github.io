@@ -4,7 +4,8 @@
   "date": "2020-07-05",
   "description": "监听器：应用启动监听器，会话监听器，请求监听器 作用： ServletContextListener 应用启动监听 HttpSessionLisener 会话监听 ServletRequestListener 请求监听",
   "tags": [
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13246163.html"

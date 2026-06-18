@@ -4,7 +4,7 @@
   "date": "2019-07-11",
   "description": "第一步，引入主要的css样式和js文件 引入主要CSS 引入主要js文件 扩展日期js文件源码 如需下载jquery文件**，百度云盘地址：https://pan.baidu.com/s/17RTAyaY9oFAeRgfjlW0Mew 提取码：uknd 第二步，创建table用于存放数据网格 创建t",
   "tags": [
-    "cnblogs"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11173287.html"

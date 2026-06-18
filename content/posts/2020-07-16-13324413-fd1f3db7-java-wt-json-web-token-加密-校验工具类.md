@@ -4,7 +4,7 @@
   "date": "2020-07-16",
   "description": "依赖项 JWTUtils.java",
   "tags": [
-    "JWT"
+    "Java"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13324413.html"

@@ -4,9 +4,8 @@
   "date": "2020-12-02",
   "description": "设置idea配置 将Properties Files (*.properties)下的Default encoding for properties files设置为UTF-8，将Transparent native-to-ascii conversion前的勾选上** 新建application.",
   "tags": [
-    "IDE",
-    "Mac系统",
-    "Spring Boot"
+    "Mac",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14074873.html"

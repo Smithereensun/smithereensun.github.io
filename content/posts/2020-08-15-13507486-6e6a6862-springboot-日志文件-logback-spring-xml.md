@@ -4,8 +4,8 @@
   "date": "2020-08-15",
   "description": "日志文件 将logback-spring.xml配置文件，放到：/src/main/resources中 日志输出效果 logback-spring.xml info、debug、warn",
   "tags": [
-    "配置文件",
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13507486.html"

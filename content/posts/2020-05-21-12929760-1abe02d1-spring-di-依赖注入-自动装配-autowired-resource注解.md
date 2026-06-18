@@ -4,7 +4,8 @@
   "date": "2020-05-21",
   "description": "@Autowired：一部分功能是**查找实例**，从Spring容器中**根据类型**（Java类）**获取对应的实例**；另一部分功能就是**赋值**，将找到的实例，装配给另一个实例的属性值。（**注：一个Java类型在同一个Spring容器中，只能有一个实例。**） @Resource：一部分",
   "tags": [
-    "Spring"
+    "Spring",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12929760.html"

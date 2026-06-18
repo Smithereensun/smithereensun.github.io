@@ -4,7 +4,7 @@
   "date": "2020-01-08",
   "description": "第一步，依次点击，File - Settings - Bulid, Execution,Deployment - Compiler - Java Compiler，修改版本为13（你使用的java是哪个版本就选哪个喔） 第二步，依次点击，File - Project Structure - Proj",
   "tags": [
-    "cnblogs"
+    "Java"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12168522.html"

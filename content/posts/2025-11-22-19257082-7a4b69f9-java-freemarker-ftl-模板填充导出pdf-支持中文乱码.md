@@ -4,8 +4,7 @@
   "date": "2025-11-22",
   "description": "添加依赖 java代码 ftl模板使用字体库 文件名：xxx.ftl ps：处理中文乱码** 字体库 更多字体库：https://www.mianfeiziti.com/thread-491.htm",
   "tags": [
-    "JAVA",
-    "Spring Boot"
+    "Java"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/19257082"

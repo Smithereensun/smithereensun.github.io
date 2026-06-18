@@ -4,8 +4,8 @@
   "date": "2024-11-04",
   "description": "介绍 是 Jackson 库中的一个类，用于自定义 Java 对象到 JSON 字符串的序列化过程。在使用 Jackson 进行对象序列化时，有时候需要对某些特定类型的字段进行定制化的序列化处理，这时就可以使用 来实现自定义的序列化逻辑。 使用 继承JsonSerializer VO上添加注解：**",
   "tags": [
-    "JAVA",
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/18173927"

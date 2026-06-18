@@ -5,7 +5,7 @@
   "description": "导读 分库分表的技术有：数据库中间件Mycat(点我直达)，当当网开源的Sharding-JDBC；我们公司用的也是sharding-jdbc，自己也搭建一个完整的项目，直接可以拿来用。下面附源码(CRUD，分页，事务等都已测试过) 技术栈 SpringBoot 2.3.9 sharding-jdb",
   "tags": [
     "Spring Boot",
-    "Sharding-JDBC"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14666668.html"

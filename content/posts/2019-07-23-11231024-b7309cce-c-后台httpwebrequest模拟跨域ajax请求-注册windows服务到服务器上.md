@@ -4,7 +4,7 @@
   "date": "2019-07-23",
   "description": "项目需求，暂且叫A、B公司吧。我们公司需要从A公司哪里读取机器上的数据，放到我们数据库中。然后再将数据库中存的数据，提供一个接口，B公司来调用，大概这个意思。 好了，言归正传。这个是之前做好的界面，用户需要手动点击“开始”，然后写了个定时器，不停的来回调用 部分源码(5秒调用后台处理)** 一天晚上",
   "tags": [
-    "cnblogs"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11231024.html"

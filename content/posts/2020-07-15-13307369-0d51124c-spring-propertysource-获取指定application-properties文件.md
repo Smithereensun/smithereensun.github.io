@@ -5,7 +5,7 @@
   "description": "@PropertySource注解的使用 @PropeertySource，指定加载配置文件 配置文件映射到实体类 使用@Value映射到具体的java属性 CustomConfig.java config.properties VideoOrder.java 验证",
   "tags": [
     "Spring",
-    "Spring Boot"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13307369.html"

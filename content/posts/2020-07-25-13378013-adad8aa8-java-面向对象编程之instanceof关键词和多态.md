@@ -4,7 +4,7 @@
   "date": "2020-07-25",
   "description": "InstanceOf关键字使用，什么是多态 InstanceOf关键字 是Java的一个二元操作符(运算符)，也是Java的保留关键字 语法 对象类型强制转换前的判断 方法重写和重载 方法重写 override 子类对父类的允许访问的方法的实现过程进行重新编写 注意点 返回值和形参都不能改变 父类的",
   "tags": [
-    "JavaSE"
+    "Java"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13378013.html"

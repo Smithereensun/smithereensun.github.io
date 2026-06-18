@@ -4,7 +4,8 @@
   "date": "2020-07-06",
   "description": "什么是定时任务和常见定时任务区别？ 某个时间定时处理某个任务 发邮件、短信等 消息提醒 统计报表系统 。。。 常见定时任务 Java自带的java.util.Timer类配置比较麻烦，时间延后问题 Quartz框架：配置更简单，xml或者注解适合分布式或者大型调度作业 SpringBoot框架自带 ",
   "tags": [
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13257569.html"

@@ -4,7 +4,8 @@
   "date": "2020-07-04",
   "description": "常用框架 阿里fastjson，谷歌gson等 JavaBean序列化为json 性能：Jackson>FastJson>Gson>lib 同个结构 Jackson、Fastjson、Gson等库各有优缺点，各有自己的专长 空间换时间，时间换空间 Jackson处理相关自动 指定字段不返回：@Jso",
   "tags": [
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13234669.html"

@@ -4,8 +4,7 @@
   "date": "2019-11-12",
   "description": "在配置数据库连接池数据源时，本来没有错误，结果加上编码转换格式后eclipse突然报错： 这是怎么回事？ 经过查询，发现这个错误其实很好解决。 首先，原因是： **.xml文件中 ‘ & ’字符需要进行转义！！！** 看到这里，其实已经恍然大悟，那么，这个字符 ‘ & ’ 需要怎么转义呢？看下面这张",
   "tags": [
-    "JAVA",
-    "Spring"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11839321.html"

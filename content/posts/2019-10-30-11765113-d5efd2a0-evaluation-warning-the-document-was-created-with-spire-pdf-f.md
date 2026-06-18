@@ -4,7 +4,7 @@
   "date": "2019-10-30",
   "description": "由于使用 Spire.Pdf 生成的书签带有 Evaluation Warning : The document was created with Spire.PDF for .NET. 字样 但是它只在第一页头部有显示，我们可以新增一页，并删掉第一页即可",
   "tags": [
-    "cnblogs"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11765113.html"

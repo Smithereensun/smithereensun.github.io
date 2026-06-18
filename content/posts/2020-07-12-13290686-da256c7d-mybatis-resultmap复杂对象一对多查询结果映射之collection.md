@@ -4,7 +4,7 @@
   "date": "2020-07-12",
   "description": "Mybatis复杂对象一对多映射配置ResultMap的collection collection：一对多查询结果映射，比如user有多个订单 表结构 项目结构图 pom.xml mybatis-config.xml db.properties log4j.properties VideoOrder",
   "tags": [
-    "MyBatis"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13290686.html"

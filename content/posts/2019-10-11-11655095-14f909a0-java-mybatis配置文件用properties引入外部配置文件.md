@@ -4,7 +4,8 @@
   "date": "2019-10-11",
   "description": "方式一：通过properties 元素的子元素来传递数据 例如： 然后其中的属性就可以在整个配置文件中被用来替换需要动态配置的属性值。比如: 这个例子中的 driver、url、username、password 将会由 properties 元素中的子元素设置的相应值来替换。 注：dataSour",
   "tags": [
-    "JAVA"
+    "Java",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11655095.html"

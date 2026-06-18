@@ -4,8 +4,7 @@
   "date": "2019-11-11",
   "description": "介绍 再使用spring操作mysql数据库报错 报错信息如下： org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is java",
   "tags": [
-    "JAVA",
-    "Spring"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11839136.html"

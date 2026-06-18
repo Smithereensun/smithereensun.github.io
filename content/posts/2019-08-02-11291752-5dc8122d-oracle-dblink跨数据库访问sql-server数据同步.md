@@ -4,7 +4,7 @@
   "date": "2019-08-02",
   "description": "第一步：需要去下载一个透明网管，相当于一个中间件(我们用的Oracle 11g，可能不同的数据库版本要安装不同的透明网管) 需要的朋友请到我的百度云盘上下载** 链接：https://pan.baidu.com/s/1W6rEww1_NxxsMXYi0BOKPQ ** 提取码：sac2 ** 第二步",
   "tags": [
-    "SQL"
+    "Oracle"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11291752.html"

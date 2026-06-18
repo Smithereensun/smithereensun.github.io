@@ -4,8 +4,8 @@
   "date": "2019-11-26",
   "description": "此文原博文地址：https://blog.csdn.net/kolamemo/article/details/51407467 按照查到的资料，JSTL taglib需要jstl.jar来支持。在1.0和1.1版本的时候，还需要standard.jar来配合。但从1.2版本开始，jar文件名字变成了",
   "tags": [
-    "JAVA",
-    "Spring"
+    "Java",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11937668.html"

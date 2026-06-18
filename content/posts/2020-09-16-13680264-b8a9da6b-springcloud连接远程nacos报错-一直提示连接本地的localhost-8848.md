@@ -4,7 +4,8 @@
   "date": "2020-09-16",
   "description": "application.properties bootstrap.properties 在resources下创建:bootstrap.properties",
   "tags": [
-    "Spring Cloud"
+    "Spring Cloud",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13680264.html"

@@ -4,7 +4,7 @@
   "date": "2020-07-12",
   "description": "Mybatis复杂对象映射配置ResultMap的association association：映射到POJO的某个复杂类型属性，比如订单order对象里面包含user对象 表结构 项目结构 pom.xml mybatis-config-xml db.properties VideoOrderMa",
   "tags": [
-    "MyBatis"
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13290428.html"

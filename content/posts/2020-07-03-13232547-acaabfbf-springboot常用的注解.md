@@ -4,7 +4,8 @@
   "date": "2020-07-03",
   "description": "@Controller 作用：用于标记这个类是一个控制器，返回页面的时候使用；如果要返回JSON，则需要在接口上使用@ResponseBody才可以 @RestController 作用：用于标记这个类是一个控制器，返回JSON数据的时候使用，如果使用这个注解，则接口返回数据会被序列化为JSON 所",
   "tags": [
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13232547.html"

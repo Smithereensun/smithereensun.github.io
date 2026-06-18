@@ -13,6 +13,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = Path("/Users/chen/Desktop/data/download_doc/cnblogs_markdown_export/posts")
 CONTENT_DIR = ROOT / "content" / "posts"
 STATIC_ASSET_DIR = ROOT / "static" / "imported" / "posts"
+REPOSITORY_ARCHIVE_DIR = ROOT / "repository-archive" / "posts"
+REPOSITORY_ARCHIVE_PAGE = ROOT / "content" / "repository-archive" / "_index.md"
+REPOSITORY_BLOB_BASE = "https://github.com/Smithereensun/smithereensun.github.io/blob/main/repository-archive/posts"
+LIGHT_POST_MAX_ASSET_MB = 5
 
 DEFAULT_TAGS = {
     "github": ["GitHub", "开源"],
@@ -194,6 +198,23 @@ def build_front_matter(meta: dict, description: str, tags: list[str]) -> str:
     return "{\n" + json.dumps(front, ensure_ascii=False, indent=2)[1:-1] + "\n}\n\n"
 
 
+def asset_stats(images_dir: Path) -> tuple[int, int]:
+    total = 0
+    files = 0
+    if not images_dir.exists():
+        return total, files
+
+    for path in images_dir.rglob("*"):
+        if path.is_file():
+            total += path.stat().st_size
+            files += 1
+    return total, files
+
+
+def is_light_post(asset_bytes: int) -> bool:
+    return asset_bytes <= LIGHT_POST_MAX_ASSET_MB * 1024 * 1024
+
+
 def clean_targets() -> None:
     if CONTENT_DIR.exists():
         for path in CONTENT_DIR.iterdir():
@@ -207,6 +228,10 @@ def clean_targets() -> None:
     if STATIC_ASSET_DIR.exists():
         shutil.rmtree(STATIC_ASSET_DIR)
     STATIC_ASSET_DIR.mkdir(parents=True, exist_ok=True)
+
+    if REPOSITORY_ARCHIVE_DIR.exists():
+        shutil.rmtree(REPOSITORY_ARCHIVE_DIR)
+    REPOSITORY_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def ensure_posts_index() -> None:
@@ -222,13 +247,42 @@ def ensure_posts_index() -> None:
     )
 
 
-def import_posts() -> tuple[int, int]:
+def write_repository_archive_page(rows: list[dict]) -> None:
+    REPOSITORY_ARCHIVE_PAGE.parent.mkdir(parents=True, exist_ok=True)
+
+    lines = [
+        "---",
+        'title: "仓库归档"',
+        'description: "这些文章内容较大，不在博客正文中展示，统一放在 GitHub 仓库中归档查看。"',
+        "---",
+        "",
+        "这些文章因为图片或资源体积较大，没有放进博客正文页面。",
+        "你仍然可以在 GitHub 仓库里查看完整 Markdown 归档。",
+        "",
+        f"- 归档阈值：单篇图片资源大于 `{LIGHT_POST_MAX_ASSET_MB}MB`",
+        f"- 当前归档数量：`{len(rows)}` 篇",
+        "",
+    ]
+
+    for row in rows:
+        size_mb = row["asset_bytes"] / 1024 / 1024
+        lines.append(
+            f"- [{row['title']}]({row['github_url']})"
+            f" · {row['date']} · {size_mb:.1f}MB · {row['asset_files']} 张资源"
+        )
+
+    REPOSITORY_ARCHIVE_PAGE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def import_posts() -> tuple[int, int, int]:
     existing_tags = extract_existing_tags()
     clean_targets()
     ensure_posts_index()
 
     imported = 0
+    repository_only = 0
     skipped = 0
+    repository_rows = []
     for folder in sorted(p for p in SOURCE_DIR.iterdir() if p.is_dir()):
         meta_path = folder / "meta.json"
         post_path = folder / "post.md"
@@ -241,31 +295,53 @@ def import_posts() -> tuple[int, int]:
         source_url = str(meta.get("url") or folder.name)
         date_str = parse_date(str(meta.get("published_at") or ""))
         file_base = f"{date_str}-{meta.get('post_id')}-{short_hash(source_url)}-{slugify(title)[:60]}"
+        src_images = folder / "images"
+        asset_bytes, asset_files = asset_stats(src_images)
+        light_post = is_light_post(asset_bytes)
         asset_prefix = f"/imported/posts/{file_base}"
 
         body = cleanup_body(read_text(post_path), title)
-        body = rewrite_asset_paths(body, asset_prefix)
         description = build_description(body, title)
         tags = infer_tags(meta, existing_tags)
         front_matter = build_front_matter(meta, description, tags)
 
-        out_path = CONTENT_DIR / f"{file_base}.md"
-        out_path.write_text(front_matter + body, encoding="utf-8")
+        if light_post:
+            body = rewrite_asset_paths(body, asset_prefix)
+            out_path = CONTENT_DIR / f"{file_base}.md"
+            out_path.write_text(front_matter + body, encoding="utf-8")
 
-        src_images = folder / "images"
-        if src_images.exists():
-            dst_images = STATIC_ASSET_DIR / file_base / "images"
-            dst_images.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copytree(src_images, dst_images)
+            if src_images.exists():
+                dst_images = STATIC_ASSET_DIR / file_base / "images"
+                dst_images.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(src_images, dst_images)
 
-        imported += 1
+            imported += 1
+            continue
 
-    return imported, skipped
+        archive_path = REPOSITORY_ARCHIVE_DIR / f"{file_base}.md"
+        archive_path.write_text(front_matter + body, encoding="utf-8")
+        repository_rows.append(
+            {
+                "title": title,
+                "date": date_str,
+                "asset_bytes": asset_bytes,
+                "asset_files": asset_files,
+                "github_url": f"{REPOSITORY_BLOB_BASE}/{archive_path.name}",
+            }
+        )
+        repository_only += 1
+
+    write_repository_archive_page(sorted(repository_rows, key=lambda row: row["date"], reverse=True))
+    return imported, repository_only, skipped
 
 
 def main() -> int:
-    imported, skipped = import_posts()
-    print(f"Imported {imported} posts; skipped {skipped}.")
+    imported, repository_only, skipped = import_posts()
+    print(
+        f"Imported {imported} light posts; "
+        f"archived {repository_only} heavy posts; "
+        f"skipped {skipped}."
+    )
     return 0
 
 

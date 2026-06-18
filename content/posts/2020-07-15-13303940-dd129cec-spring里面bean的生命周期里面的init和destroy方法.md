@@ -4,7 +4,8 @@
   "date": "2020-07-15",
   "description": "Spring里面bean的生命周期里面的init和destroy方法",
   "tags": [
-    "Spring"
+    "Spring",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13303940.html"

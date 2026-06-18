@@ -4,8 +4,7 @@
   "date": "2020-08-01",
   "description": "引入依赖 配置application.properties Service层 PageMethod.java** PageHelper还有很多其他方法，可以尝试用其他的方法** 效果",
   "tags": [
-    "ssm",
-    "Spring Boot"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13417048.html"

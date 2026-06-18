@@ -4,7 +4,7 @@
   "date": "2020-03-03",
   "description": "win10彻底关闭defender的方法 首先右键开始菜单按钮，点击“运行”，输入“gpedit.msc”，打开“本地组策略编辑器”。 依次选择“计算机配置”-“管理模板”-“Windows组件”-“Windows Defender防病毒程序”。 找到“关闭Windows Defender防病毒程序",
   "tags": [
-    "cnblogs"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12402905.html"

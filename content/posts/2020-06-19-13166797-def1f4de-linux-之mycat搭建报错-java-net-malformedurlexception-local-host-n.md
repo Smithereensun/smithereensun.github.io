@@ -4,8 +4,8 @@
   "date": "2020-06-19",
   "description": "搭建MyCat环境时出现 错误: 代理抛出异常错误: java.net.MalformedURLException: Local host name unknown: java.net.UnknownHostException: node04: 无法识别当前的主机名 node04 解决办法 保存，重",
   "tags": [
-    "Linux",
-    "SQL"
+    "Java",
+    "Linux"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13166797.html"

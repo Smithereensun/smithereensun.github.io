@@ -4,7 +4,7 @@
   "date": "2020-11-28",
   "description": "导读 昨天下午，公司业务跑不通，然后开发组长让架构师联系我，给我发一个json和部署到dev上的微服务url，让我去测试下，将发来的json放到json.cn上愣是解析不出来，我就用之前的json请求下dev上的微服务，发现是通的，初次判断是json格式的问题，对比下发来的json和之前的json有",
   "tags": [
-    "JSON"
+    "Mac"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14051493.html"

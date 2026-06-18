@@ -4,7 +4,7 @@
   "date": "2019-07-09",
   "description": "之前数据量少的时候，用:select wm_concat(字段) from 表 拼接数据量小的话，没有问题，数据量超出4000个就会爆以下错误信息：** 解决方法(Oracle 函数xmlagg拼接): 效果图： SQL语句 拼接出来的语句，最后会多一个“,”，可以使用**substr**截取字符串",
   "tags": [
-    "SQL"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11156228.html"

@@ -4,7 +4,7 @@
   "date": "2020-01-14",
   "description": "参考：https://www.cnblogs.com/benbenduo/p/4588612.html 这个子句主要是用于B树结构类型的数据递归查询，给出B树结构类型中的任意一个结点，遍历其最终父结点或者子结点。 先看原始数据： 对应B树结构为： 接下来看一个示例： 要求给出其中一个结点值，求其最终",
   "tags": [
-    "SQL"
+    "Oracle"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12192207.html"

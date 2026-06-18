@@ -4,8 +4,9 @@
   "date": "2019-11-05",
   "description": "错误信息 解决方法，更换javax.annotation包的版本 之前用的 更改后的版本",
   "tags": [
-    "JAVA",
-    "Spring"
+    "Spring",
+    "Java",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11801803.html"

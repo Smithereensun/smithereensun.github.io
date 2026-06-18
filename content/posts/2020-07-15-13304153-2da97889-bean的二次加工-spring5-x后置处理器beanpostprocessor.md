@@ -4,7 +4,8 @@
   "date": "2020-07-15",
   "description": "什么是BeanPostProcessor 是Spring IOC容器给我们提供的一个扩展接口 在调用初始化方法前后对Bean进行额外加工，ApplicationContext会自动扫描实现了BeanPostProcessor得bean，并注册这些bean为后置处理器 是Bean的统一前置后置处理而不",
   "tags": [
-    "Spring"
+    "Spring",
+    "Elasticsearch"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13304153.html"

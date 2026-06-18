@@ -4,7 +4,7 @@
   "date": "2020-09-27",
   "description": "DO： domain object持久对象 就是从现实世界中抽象出来的有形或无形的业务实体。* PO： persistant object持久对象 最形象的理解就是一个PO就是数据库中的一条记录。 好处是可以把一条记录作为一个对象处理，可以方便的转为其它对象。 BO： business object",
   "tags": [
-    "JAVA"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13741039.html"

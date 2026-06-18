@@ -4,7 +4,7 @@
   "date": "2019-10-14",
   "description": "newInstance()在 java9中已被弃用 JAVA9之前用法 JAVA9之后用法 源码说明",
   "tags": [
-    "JAVA"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11674336.html"

@@ -4,9 +4,7 @@
   "date": "2019-12-11",
   "description": "简介 SpringMvc文件上传的实现，是由commons-fileupload这个jar包实现的。 需求 在修改商品页面，添加上传商品图片功能。 Maven依赖包 pom.xml 配置多部件bean：springmvc.xml 控制层：ItemController.java jsp文件：item-",
   "tags": [
-    "MVC",
-    "JAVA",
-    "Spring MVC"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12023244.html"

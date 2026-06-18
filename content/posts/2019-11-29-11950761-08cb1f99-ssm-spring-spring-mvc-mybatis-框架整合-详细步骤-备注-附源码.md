@@ -4,10 +4,7 @@
   "date": "2019-11-29",
   "description": "整合思路 将工程的三层结构中的JavaBean分别使用Spring容器(**通过XML方式**)进行管理。 整合持久层mapper，包括数据源、会话工程及mapper代理对象的整合； 整合业务层Service，包括事务及service的bean的配置； 整合表现层Controller，直接使用spr",
   "tags": [
-    "JAVA",
-    "Spring",
-    "ssm",
-    "Spring MVC"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11950761.html"

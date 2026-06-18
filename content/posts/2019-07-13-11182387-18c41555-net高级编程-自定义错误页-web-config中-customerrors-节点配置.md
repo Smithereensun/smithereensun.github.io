@@ -4,7 +4,7 @@
   "date": "2019-07-13",
   "description": "错误页 、当页面发生错误的时候，ASP.Net会将错误信息展示出来(Sqlconnection的错误就能暴露连接字符串)，这样一来不好看，二来泄露网站的内部实现信息，给网站带来安全隐患，因此需要定制错误页，发生错误时显示开发人员定制的页面。404页面放点广告也好的嘛。 、配置web.config，配",
   "tags": [
-    "cnblogs"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11182387.html"

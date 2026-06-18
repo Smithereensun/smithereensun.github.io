@@ -4,8 +4,7 @@
   "date": "2019-11-02",
   "description": "首先报这个错误，你得明白，是什么原因导致的？ 答：未引入命名空间，和约束文件 解决方法： 标签中加上 约束文件的话，请看：http://www.springframework.org/schema/beans/spring-beans.xsd 若不加上命名空间的话bean得这样写",
   "tags": [
-    "JAVA",
-    "Spring"
+    "笔记"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/11784503.html"

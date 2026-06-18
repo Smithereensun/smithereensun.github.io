@@ -4,8 +4,8 @@
   "date": "2020-11-30",
   "description": "添加依赖 模板 测试 反射获取对象里的值，组装成Map结构 点我直达",
   "tags": [
-    "JavaSE",
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/14062922.html"

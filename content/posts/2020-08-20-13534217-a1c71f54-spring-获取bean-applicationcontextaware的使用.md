@@ -4,8 +4,6 @@
   "date": "2020-08-20",
   "description": "创建类继承ApplicationContextAware** 使用",
   "tags": [
-    "Spring Boot",
-    "JAVA",
     "Spring"
   ],
   "source": "cnblogs-export",

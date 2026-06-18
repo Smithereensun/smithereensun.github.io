@@ -4,8 +4,7 @@
   "date": "2020-05-31",
   "description": "web.xml springmvc.xml pom.xml 项目案例",
   "tags": [
-    "Spring MVC",
-    "配置文件"
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/12996899.html"

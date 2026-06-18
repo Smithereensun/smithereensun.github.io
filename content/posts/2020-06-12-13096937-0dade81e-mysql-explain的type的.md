@@ -4,9 +4,7 @@
   "date": "2020-06-12",
   "description": "导语 很多情况下，有很多人用各种select语句查询到了他们想要的数据后，往往便以为工作圆满结束了。 这些事情往往发生在一些学生亦或刚入职场但之前又没有很好数据库基础的小白身上，但所谓闻道有先后，只要我们小白好好学习，天天向上，还是很靠谱的。 当一个sql查询语句被写出来之后，其实你的工作只完成了一",
   "tags": [
-    "SQL",
-    "SQL优化",
-    "技术干货"
+    "MySQL"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13096937.html"

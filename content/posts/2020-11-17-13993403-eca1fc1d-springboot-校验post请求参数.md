@@ -4,7 +4,8 @@
   "date": "2020-11-17",
   "description": "导读 前后端分离项目中，前端往后端传值时，后端都要做参数格式校验，比如校验数字最大值、最小值、是否允许为空、日期格式等等。 添加依赖 自定义日期注解 作用 校验日期格式，自定义校验规格 DateTime.java 约束自定义注解校验器 作用 校验自定义注解验证格式 DateTimeValidator",
   "tags": [
-    "Spring Boot"
+    "Spring Boot",
+    "Spring"
   ],
   "source": "cnblogs-export",
   "source_url": "https://www.cnblogs.com/chenyanbin/p/13993403.html"
