@@ -1,0 +1,802 @@
+{
+
+  "title": "Mybatis 快速入门(XML方式) 底层源码对象初始化过程分析",
+  "date": "2020-05-16",
+  "description": "导读 官网地址 https://mybatis.org/mybatis-3/zh/index.html 架构原理图 说明 mybatis配置文件 SqlMapConfig.xml，此文件为mybatis的全局配置文件，配置了mybatis的运行环境等信息 XXXMapper.xml，此文件作为myb",
+  "tags": [
+    "笔记"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/12895291.html"
+
+}
+
+# 导读
+
+## 官网地址
+
+https://mybatis.org/mybatis-3/zh/index.html
+
+## 架构原理图
+
+![](./images/images/img_001_e20b2d852ce5.png)
+
+## 说明
+
+### mybatis配置文件
+
+1. SqlMapConfig.xml，此文件为mybatis的全局配置文件，配置了mybatis的运行环境等信息
+2. XXXMapper.xml，此文件作为mybatis的sql映射文件，文件中配置了操作数据库的CRUD语句。需要在SqlMapConfig.xml中加载
+
+### SqlSessionFactory
+
+1. 通过mybatis环境等配置信息构造SqlSessionFactory，既会话工厂
+
+### ***跟底层源码查看创建SqlSessionFactory流程***
+
+注：底层如何获取标签值，请自行研究(**剧透：for循环遍历XML获取标签中的值，然后放入Map**)！~
+
+![](./images/images/img_002_8e215f0b1481.gif)
+
+### SqlSession
+
+1. 通过会员工厂创建SqlSession即会话，程序通过SqlSession会话接口对数据库进行CRUD操作。
+
+### Executor执行器
+
+　　mybatis底层自定义了Executor执行器接口来具体操作数据库，Executor接口有两个实现，一个是基本执行器(默认)，一个缓存执行器，SqlSession底层是通过executor接口操作数据库
+
+### Mapped Statement
+
+　　他是mybatis一个底层封装对象，包装了mybatis配置信息及XXXMapper.xml映射文件等。XXXMapper.xml文件中一个个**select/insert/update/delete标签对应一个Mapped Statement对象**。
+
+## 原始JDBC代码
+
+　　原始JDBC和mybatis操作数据库数据，与上面架构图流程相对应。
+
+```text
+public class JDBCTest {
+
+    public static void main(String[] args) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // 加载数据库驱动
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // 通过驱动管理类获取数据库链接connection = DriverManager
+            connection = DriverManager.getConnection(
+                              "jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8",
+                             "root",
+                              "root"
+                              );
+
+            // 定义sql语句 ?表示占位符
+            String sql = "select * from user where username = ?";
+            // 获取预处理 statement
+            preparedStatement = connection.prepareStatement(sql);
+
+            // 设置参数，第一个参数为 sql 语句中参数的序号（从 1 开始），第二个参数为设置的
+            preparedStatement.setString(1, "王五");
+            // 向数据库发出 sql 执行查询，查询出结果集
+            resultSet = preparedStatement.executeQuery();
+            // 遍历查询结果集
+            while (resultSet.next()) {
+                System.out.println(
+                                  resultSet.getString("id")
+                                  + " " +
+                                  resultSet.getString("username")
+                     );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放资源
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+```
+
+# Mybatis 入门基础
+
+## 表结构
+
+![](./images/images/img_003_7cf1a335a2cc.png)
+
+###  表数据
+
+![](./images/images/img_004_84838ea0094d.png)
+
+## Mybatis环境搭建 
+![](./images/images/img_005_5ef15a5359f5.png)
+![](./images/images/img_006_6b4d13e183a3.png)
+
+![](./images/images/img_007_3ab3640a75e4.png)
+
+![](./images/images/img_008_5b20f7248ccb.png)
+
+### 添加依赖
+
+pom.xml
+
+```text
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.cyb</groupId>
+    <artifactId>mybatis</artifactId>
+    <packaging>war</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>mybatis Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <!-- mybatis依赖 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+        <!-- mysql依赖 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.20</version>
+        </dependency>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>mybatis</finalName>
+    </build>
+</project>
+```
+
+### SqlMapConfig.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 引入外部配置文件 -->
+    <properties resource="db.properties"></properties>
+    <!-- 数据库链接相关 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driver}" />
+                <property name="url" value="${db.url}" />
+                <property name="username" value="${db.username}" />
+                <property name="password" value="${db.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!-- 添加映射文件 -->
+        <mapper resource="UserMapper.xml" />
+    </mappers>
+</configuration>
+```
+
+db.properties
+
+```text
+db.driver=com.mysql.jdbc.Driver
+db.url=jdbc:mysql://127.0.0.1:3306/cyb
+db.username=root
+db.password=root
+```
+
+### UserMapper.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:为了分类管理映射文件中的MappedStatement -->
+<mapper namespace="test">
+<select id="queryUserById" parameterType="int" resultType="com.cyb.mybatis.demo.User">
+        select * from user where id = #{id}
+    </select>
+</mapper>
+```
+
+### User.java
+
+```text
+package com.cyb.mybatis.demo;
+
+import java.util.Date;
+
+public class User {
+    private int id;
+    private String username;
+    private Date birthday;
+    private int sex;
+    private String address;
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public Date getBirthday() {
+        return birthday;
+    }
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+    public int getSex() {
+        return sex;
+    }
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", birthday=" + birthday + ", sex=" + sex + ", address="
+                + address + "]";
+    }
+}
+```
+
+### MybatisDemo.java
+
+```text
+package com.cyb.mybatis.demo;
+
+import java.io.InputStream;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Before;
+import org.junit.Test;
+
+public class MybatisDemo {
+
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Before
+    public void init() throws Exception {
+        //指定全局配置文件路径
+        String resource = "SqlMapConfig.xml";
+        //加载资源文件(包括全局文件和映射文件)
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        //使用构建者模式创建SqlSessionFactory
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    }
+
+    @Test
+    public void testSelect() {
+        //由SqlSessionFactory工厂去创建SqlSession(会话)
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //调用SqlSession接口，去实现数据库的CRUD
+        User user = sqlSession.selectOne("test.queryUserById", 1);
+        System.out.println(user);
+        //释放资源
+        sqlSession.close();
+    }
+}
+```
+
+### 项目结构
+
+![](./images/images/img_009_4c30b38ce679.png)
+
+### 测试
+
+![](./images/images/img_010_a2ee52667d95.gif)
+
+## 功能实现
+
+### 根据用户id查询一个用户信息
+
+![](./images/images/img_011_7fb8a3e911ed.png)
+
+![](./images/images/img_012_086a4d43a485.png)
+
+![](./images/images/img_013_ba2b80cc120d.png)
+
+![](./images/images/img_014_9a08b6026376.gif)
+
+### 根据用户名称模糊查询用户信息列表
+
+![](./images/images/img_015_59ccaedebcc0.png)
+
+![](./images/images/img_016_df051a25c547.png)
+
+### 添加用户
+
+![](./images/images/img_017_d2c8129da845.png)
+
+![](./images/images/img_018_9a8a2dea19e1.png)
+
+主键返回
+
+```text
+    <!-- 主键返回 -->
+    <insert id="insertUser" parameterType="com.cyb.mybatis.demo.User">
+        <!-- selectKey将主键返回，需要再返回 -->
+        <selectKey keyProperty="id" order="AFTER"
+            resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username,birthday,sex,address)
+        values(#{username},#{birthday},#{sex},#{address});
+    </insert>
+```
+
+添加selectKey标签实现主键返回。
+
+******* keyProperty**:指定返回的主键，存储在pojo中的哪个属性
+
+******* ****order**：selectKey标签中的sql的执行顺序，是相对与insert语句来说。由于mysql的自增原理，执行完insert语句之后才将主键生成，所以这里selectKey的执行顺序为after。
+
+******* ****resultType**:返回的主键对应的JAVA类型
+
+******* LAST_INSERT_ID()**:是mysql的函数，返回auto_increment自增列新记录id值。
+
+### 更新用户
+
+![](./images/images/img_019_1bc70f79a13f.png)
+
+![](./images/images/img_020_78577d32420b.png)
+
+![](./images/images/img_021_be8c681314b7.gif)
+
+### 删除用户
+
+![](./images/images/img_022_ae6f39a20467.png)
+
+![](./images/images/img_023_33e70a325f6d.png)
+
+![](./images/images/img_024_85eb75a8dd48.gif)
+
+# Mybatis开发Dao层
+
+## mapper代理开发方式
+
+### XML方式
+
+使用：只需要开发Mapper接口(Dao接口)和xxxMapper约束文件，不需要编写实现类。
+
+开发规范：
+
+1. **Mapper**接口**的类路径**与**xxxMapper.xml**文件中的**namespace****相同**
+2. **Mapper**接口**方法名称**和**xxxMapper.xml**中定义的每个**statement**的**id相同**
+3. **Mapper**接口**方法的****输入参数类型**和**xxxMapper.xml**中定义的每个sql的**parameterType的类型相同**
+4. **Mapper**接口方法的**返回值类型**和**xxxMapper.xml**中定义的每个sql的**resultType类型相同**
+
+### pom.xml
+
+```text
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.cyb</groupId>
+    <artifactId>mybatis</artifactId>
+    <packaging>war</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>mybatis Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <!-- mybatis依赖 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+        <!-- mysql依赖 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.20</version>
+        </dependency>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>mybatis</finalName>
+    </build>
+</project>
+```
+
+### SqlMapConfig.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 引入外部配置文件 -->
+    <properties resource="db.properties"></properties>
+    <!-- 数据库链接相关 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driver}" />
+                <property name="url" value="${db.url}" />
+                <property name="username" value="${db.username}" />
+                <property name="password" value="${db.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!-- 添加映射文件 -->
+        <mapper resource="mapper/UserMapper.xml" />
+    </mappers>
+</configuration>
+```
+
+#### db.properties
+
+```text
+db.driver=com.mysql.jdbc.Driver
+db.url=jdbc:mysql://127.0.0.1:3306/cyb
+db.username=root
+db.password=root
+```
+
+### UserMapper.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:为了分类管理映射文件中的MappedStatement -->
+<mapper namespace="com.cyb.mybatis.mapper.UserMapper">
+    <!-- 通过ID查询 -->
+    <select id="queryUserById" parameterType="int"
+        resultType="com.cyb.mybatis.demo.User">
+        select * from user where id = #{id}
+    </select>
+</mapper>
+```
+
+### Use.java
+
+```text
+package com.cyb.mybatis.demo;
+
+import java.util.Date;
+
+public class User {
+    private int id;
+    private String username;
+    private Date birthday;
+    private int sex;
+    private String address;
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public Date getBirthday() {
+        return birthday;
+    }
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+    public int getSex() {
+        return sex;
+    }
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", birthday=" + birthday + ", sex=" + sex + ", address="
+                + address + "]";
+    }
+}
+```
+
+### UserMapper.java
+
+```text
+package com.cyb.mybatis.mapper;
+
+import com.cyb.mybatis.demo.User;
+
+public interface UserMapper {
+    /**
+     * 根据用户id查询用户信息
+     * @param id 内码
+     * @return
+     * @throws Exception
+     */
+    public User queryUserById(int id) throws Exception;
+}
+```
+
+### MybatisDemo.java
+
+```text
+package com.cyb.mybatis.demo;
+
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.cyb.mybatis.mapper.UserMapper;
+
+public class MybatisDemo {
+
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Before
+    public void init() throws Exception {
+        // 指定全局配置文件路径
+        String resource = "SqlMapConfig.xml";
+        // 加载资源文件(包括全局文件和映射文件)
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        // 使用构建者模式创建SqlSessionFactory
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    }
+
+    @Test
+    public void testSelect() throws Exception {
+        // 由SqlSessionFactory工厂去创建SqlSession(会话)
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        // 调用SqlSession接口，去实现数据库的CRUD
+        UserMapper userMapper=sqlSession.getMapper(UserMapper.class);
+        User user = userMapper.queryUserById(1);
+        System.out.println(user);
+        // 释放资源
+        sqlSession.close();
+    }
+}
+```
+
+### 项目结构
+
+![](./images/images/img_025_01c630d69337.png)
+
+### 测试 
+
+![](./images/images/img_026_6f340f979dc4.gif)
+
+# 全局配置文件
+
+## properties标签
+
+　　可以引入java属性文件中的配置信息
+
+![](./images/images/img_027_f750442302de.png)
+
+## typeAlias标签
+
+**别名的作用**：为了**简化映射文件中**parameterType和resultType中POJO类型的**包名**
+
+### 默认支持别名
+
+![](./images/images/img_028_abadfcf7e72d.png)
+
+### 批量指定别名(推荐)
+
+![](./images/images/img_029_1417ab5358a5.png)
+
+**注：可以写多个package，但是package和typeAlias不能一起用！！！**
+
+### 单个指定别名(**typeAlias**)
+
+![](./images/images/img_030_7de740bf091a.png)
+
+**注：可以写多个typeAlias，但是package和typeAlias不能一起用！！！**
+
+## mappers标签
+
+### <mapper resource="" /> (不推荐)
+
+![](./images/images/img_031_c136de42ed2d.png)
+
+**注：一次加载一个映射文件，相当于资源路径**
+
+### <package name="" />(**推荐**) 
+
+　　注册指定包下的所有mapper接口，来加载mapper映射文件。
+
+![](./images/images/img_032_3621c4191cfd.png)
+
+**注：mapper接口和mapper映射文件名称相同，且放到同一目录下**
+
+# 关联查询
+
+## 一对多
+
+![](./images/images/img_033_b60c0f44d734.png)
+
+```text
+Collection标签：定义了一对多关联的结果映射。
+property="orders"：关联查询的结果集存储在User对象的上哪个属性。
+ofType="orders"：指定关联查询的结果集中的对象类型即List中的对象类型。此处可以使用别名，也可以使用全限定名。
+```
+
+![](./images/images/img_034_42b6a6d801a4.png)
+
+![](./images/images/img_035_e2b93bbbf0dc.png)
+
+# 源码部分
+
+## 构建SqlSessionFactory过程
+
+　　下面我们具体的查看下是如何构建SqlSessionFactory对象
+
+![](./images/images/img_036_90635cfbd1d3.gif)
+
+　　通过源码可以看出，**最终**会**生成一个DefaultSqlSessionFactory实例**，这个不是我们关注的重点，我们核心是关注如何初始化对象的。
+
+## 构建XMLConfigBuilder对象
+
+　　build函数首先会构造一个**XMLConfigBuilder**对象，他是解析XML配置文件的。
+
+![](./images/images/img_037_9531c5fd79b6.png)
+
+- **XMLxxxBuilder**：解析XML配置文件的，不同类型的XMLxxxBuilder解析不同的部位
+
+  - XMLConfigBuilder：解析mybatis全局配置文件
+  - XMLMapperBuilder：解析mybatis映射文件
+  - XMLStatementBuilder：解析映射文件中statement语句(**CRUD Sql语句**)
+  - MapperBuilderAssistant：辅助解析映射文件并生成MappedStatement对象
+
+这些XMLxxxBuilder都有一个**共同的父类**->**BaseBuilder**。**这个父类维护了全局的Configuration对象,mybatis的配置文件解析后就以Configuration对象的形式存储**。　　　
+
+![](./images/images/img_038_cd15104d5c5f.png)
+
+## 加载映射文件
+
+　　底层代码量较多，录制的gif图片较大不能上传，分3段上传的，内容都是连续的；这里抛块砖，实际还是要自己打个断点，跟踪下底层源码，根据自身爱好，研究相应内容，准备工作：了解知识点：**XPath**(如，解析XML配置文件，[点我直达](https://www.w3school.com.cn/xpath/index.asp))、**设计模式**(如：构建者模式，[点我直达](https://www.runoob.com/design-pattern/builder-pattern.html))、**面向对象**等等，要不然跟踪源码是件很痛苦的事儿~~~
+
+![](./images/images/img_039_68e91c7d9986.gif)
+
+![](./images/images/img_040_4e551d78a6ee.gif)
+
+![](./images/images/img_041_dd6875b3b573.gif)
+
+### 构建者模式使用地方
+
+![](./images/images/img_042_966b09fcbc2c.png)
+
+### XPath使用地方
+
+![](./images/images/img_043_88dce627eea3.png)
+
+### 补充
+
+![](./images/images/img_044_b449b6740ada.png)
+
+![](./images/images/img_045_8b1acf880451.png)
+
+**注意：此处用到了遍历list节点，因为映射文件有很多的select、update、delete标签哦~**
+
+![](./images/images/img_046_62c8bd9668cf.png)
+
+## 打开session会话
+
+　　我们可以看到，SqlSessionFactory是一个接口，里面有很多重载方法
+
+![](./images/images/img_047_3d4e4f2bac69.gif)
+
+### SqlSessionFactory接口重载说明
+
+![](./images/images/img_048_781ee66a9b45.png)
+
+### 跟踪到SqlSessionFactory的实现类DefaultSqlSessionFactory
+
+　　通过跟踪到DefaultSqlSessionFactory，我们可以看到，**底层使用了重载，默认自动提交事务未false，从而解答了，我们使用默认无参构造函数时，对数据库进行：插入、修改、删除，需要手动提交事务**
+
+![](./images/images/img_049_18e6a92e05c7.gif)
+
+**细心的小伙伴此时会问，问什么跟踪源码的时候，他不是有两个实现类吗，为什么要跟踪上面一个，不跟踪下面那个，是因为创建SqlSessionFactory的时候，默认返回的是DefaultSqlSessionFactory**
+
+![](./images/images/img_050_40dbd798e695.gif)
+
+## 跟踪selectOne
+
+![](./images/images/img_051_1c62ef818c1c.gif)
+
+### selectList分析
+
+![](./images/images/img_052_9b324de34332.png)
+
+我们跟踪下，是如何从Configuration全局配置文件中(**从Map中获取**)，获取MapperStatement的；注：**这个全局配置文件(configuration)是在初始化SqlSessionFactory时加载的**
+
+![](./images/images/img_053_46566b182f64.gif)
+
+接下来我们跟踪下，是如何解析传递的参数的，分3种处理情况，分别为：集合、list、其他；注：**参数类型与xxxMapper.xml的parameterType类型想对应，传什么类型，走什么情况**
+
+![](./images/images/img_054_1017992304c5.gif)
+
+![](./images/images/img_055_c1c781c42300.png)
+
+### 跟踪executor.query
+
+　　先走下面那个实现类，在走上面那个实现类
+
+![](./images/images/img_056_5fda35515714.png)
+
+**为什么先走下面那个实现类呢？**看gif，先委托下面那个实现类
+
+![](./images/images/img_057_d3132ac3699a.gif)
+
+## 设置参数绑定
+
+　　打个断点，调试下就知道了！！
+
+![](./images/images/img_058_be21fbb8911d.gif)
+
+![](./images/images/img_059_d82b7630aa0c.gif)

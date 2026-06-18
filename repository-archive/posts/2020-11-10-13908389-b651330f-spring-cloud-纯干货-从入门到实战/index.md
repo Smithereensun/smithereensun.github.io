@@ -1,0 +1,1920 @@
+{
+
+  "title": "Spring Cloud 纯干货，从入门到实战",
+  "date": "2020-11-10",
+  "description": "导读 之前写过一篇SpringCloud从入门到精通的点我直达，微服务基础知识点我直达，今天我们使用Spring Cloud模拟一个电商项目。分别有以下2个服务，商品、订单。下面我们开始叭 技术栈 SpringBoot整合SpringCloud 通信方式：http restful 注册中心：eruk",
+  "tags": [
+    "Spring"
+  ],
+  "source": "cnblogs-export",
+  "source_url": "https://www.cnblogs.com/chenyanbin/p/13908389.html"
+
+}
+
+# 导读
+
+　　之前写过一篇SpringCloud从入门到精通的[点我直达](https://www.cnblogs.com/chenyanbin/p/12608621.html)，微服务基础知识[点我直达](https://www.cnblogs.com/chenyanbin/p/13908339.html)，今天我们使用Spring Cloud模拟一个电商项目。分别有以下2个服务，商品、订单。下面我们开始叭
+
+## 技术栈
+
+1. SpringBoot整合SpringCloud
+2. 通信方式：http restful
+3. 注册中心：eruka
+4. 断路器：hystrix
+5. 网关：zuul
+
+## 商品服务
+
+### 功能点
+
+- 商品列表
+- 商品详情
+
+## 订单服务
+
+### 功能点
+
+- 我的订单
+- 下单接口
+
+# 搭建Eureka Server
+
+## 创建项目
+
+![](./images/images/img_001_6c54b0e174c0.gif)
+
+## 项目结构
+
+![](./images/images/img_002_18a6da6bc8a7.png)
+
+## pom.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>eureka_server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>eureka_server</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+## 启动类上加注解
+
+![](./images/images/img_003_c1f1075f2a3c.png)
+
+## application.properties
+
+![](./images/images/img_004_f28ce796ef3c.png)
+
+```text
+# 服务端口号
+server.port=8761
+# eureka主机名
+eureka.instance.hostname=localhost
+# 指定当前主机是否需要向注册中心注册(不用，因为当前主机是Server，不是Client)
+eureka.client.register-with-eureka=false
+# 指定当前主机是否需要获取注册信息(不用，因为当前主机是Server，不是Client)
+eureka.client.fetch-registry=false
+# 注册中心地址
+eureka.client.service-url.defaultZone=http://${eureka.instance.hostname}:${server.port}/eureka/
+```
+
+## 启动服务并查看监控台
+
+![](./images/images/img_005_fd7a05b77505.gif)
+
+# 搭建Eureka Client商品服务
+
+## 创建项目
+
+![](./images/images/img_006_49f30ceded96.gif)
+
+## 项目结构
+
+![](./images/images/img_007_0ca176582626.png)
+
+## pom.xml
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>product_service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>product_service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+View Code
+
+## application.properties
+
+```text
+# 服务端口号
+server.port=8771
+# 服务名称
+spring.application.name=product_service
+# 将服务注册到注册中心，eureka_service的地址
+eureka.client.service-url.defaultZone:http://localhost:8761/eureka/
+```
+
+## ProductController.java
+
+```text
+package com.ybchen.product_service.controller;
+
+import com.ybchen.product_service.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @ClassName：ProductController
+ * @Description：商品
+ * @Author：chenyb
+ * @Date：2020/11/1 8:42 下午
+ * @Versiion：1.0
+ */
+@RestController
+@RequestMapping("/api/v1/product")
+public class ProductController {
+    @Autowired
+    private ProductService productService;
+
+    /**
+     * 商品列表
+     *
+     * @return
+     */
+    @PostMapping("list")
+    public Object list() {
+        return productService.listProduct();
+    }
+
+    /**
+     * 根据id查询商品
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("findById")
+    public Object findById(@RequestParam("id") int id) {
+        return productService.findById(id);
+    }
+}
+```
+
+## Product.java
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+package com.ybchen.product_service.domain;
+
+import java.io.Serializable;
+
+/**
+ * @ClassName：Product
+ * @Description：商品实体类
+ * @Author：chenyb
+ * @Date：2020/11/1 8:43 下午
+ * @Versiion：1.0
+ */
+public class Product implements Serializable {
+    /**
+     * 内码
+     */
+    private String id;
+    /**
+     * 商品名称
+     */
+    private String name;
+    /**
+     * 价格，分为单位
+     */
+    private int price;
+    /**
+     * 库存
+     */
+    private int store;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getStore() {
+        return store;
+    }
+
+    public void setStore(int store) {
+        this.store = store;
+    }
+
+    public Product() {
+
+    }
+
+    public Product(String id, String name, int price, int store) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.store = store;
+    }
+
+    @Override
+    public String toString() {
+        return "product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", store=" + store +
+                '}';
+    }
+}
+```
+
+View Code
+
+## ProductService.java
+
+```text
+package com.ybchen.product_service.service;
+
+import com.ybchen.product_service.domain.Product;
+
+import java.util.List;
+
+/**
+ * @ClassName：ProductService
+ * @Description：商品service
+ * @Author：chenyb
+ * @Date：2020/11/1 8:45 下午
+ * @Versiion：1.0
+ */
+public interface ProductService {
+    /**
+     * 商品列表
+     * @return
+     */
+    List<Product> listProduct();
+
+    /**
+     * 根据id查询商品
+     * @param id
+     * @return
+     */
+    Product findById(int id);
+}
+```
+
+## ProductServiceImpl.java
+
+```text
+package com.ybchen.product_service.service.impl;
+
+import com.ybchen.product_service.domain.Product;
+import com.ybchen.product_service.service.ProductService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+/**
+ * @ClassName：ProductServiceImpl
+ * @Description：ProductService实现类
+ * @Author：chenyb
+ * @Date：2020/11/1 8:47 下午
+ * @Versiion：1.0
+ */
+@Service
+public class ProductServiceImpl implements ProductService {
+    //初始化内存商品数据。模拟数据库中存储的商品
+    private static final Map<Integer, Product> daoMap = new HashMap<>();
+
+    @Value("${server.port}")
+    private String port;
+    static {
+        for (int i = 0; i < 5; i++) {
+            daoMap.put(i, new Product(i + "", "iphone_" + i, 1000 * i, 10));
+        }
+    }
+
+    @Override
+    public List<Product> listProduct() {
+        Collection<Product> values = daoMap.values();
+        return new ArrayList<>(values);
+    }
+
+    @Override
+    public Product findById(int id) {
+        Product product = daoMap.get(id);
+        product.setName(product.getName()+"_"+port);
+        return product;
+    }
+}
+```
+
+## ProductServiceApplication.java
+
+```text
+package com.ybchen.product_service;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ProductServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
+
+}
+```
+
+## 启动并查看监控台
+
+　　启动2个服务，并查看监控台
+
+![](./images/images/img_010_c7bce03875bf.gif)
+
+# 搭建Eureka Client订单服务
+
+## 创建项目
+
+![](./images/images/img_011_8293cb17869d.gif)
+
+## 项目结构
+
+![](./images/images/img_012_39d5acc823ed.png)
+
+## pom.xml
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>order_service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>order_service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+## application.properties
+
+```text
+# 服务端口号
+server.port=8781
+# 服务名称
+spring.application.name=order-service
+# 将服务注册到注册中心，eureka_service的地址
+eureka.client.service-url.defaultZone:http://localhost:8761/eureka/
+```
+
+## OrderServiceApplication.java
+
+　　启动类添加Ribbon注解
+
+```text
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+```
+
+```text
+package com.ybchen.order_service;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+public class OrderServiceApplication {
+    /**
+     * 负载均衡Ribbon
+     * @return
+     */
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(OrderServiceApplication.class, args);
+    }
+
+}
+```
+
+## OrderController.java
+
+```text
+package com.ybchen.order_service.controller;
+
+import com.ybchen.order_service.service.ProductOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api/v1/order")
+public class OrderController {
+    @Autowired
+    private ProductOrderService productOrderService;
+    @RequestMapping("save")
+    public Object save(@RequestParam("user_id")int userId,@RequestParam("product_id")int productId){
+        return productOrderService.save(userId,productId);
+    }
+}
+```
+
+## ProductOrder.java
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+package com.ybchen.order_service.domain;
+
+import java.util.Date;
+
+/**
+ * 商品订单实体类
+ */
+public class ProductOrder {
+    /**
+     * 主键
+     */
+    private int id;
+    /**
+     * 商品名称
+     */
+    private String productName;
+    /**
+     * 订单流水号
+     */
+    private String tradeNo;
+    /**
+     * 价格，以分位单位
+     */
+    private int price;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 用户id
+     */
+    private String userId;
+    /**
+     * 用户名称
+     */
+    private String userName;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductOrder{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", tradeNo='" + tradeNo + '\'' +
+                ", price=" + price +
+                ", createTime=" + createTime +
+                ", userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
+}
+```
+
+View Code
+
+## ProductOrderService.java
+
+```text
+package com.ybchen.order_service.service;
+
+import com.ybchen.order_service.domain.ProductOrder;
+
+public interface ProductOrderService {
+    ProductOrder save(int userId, int productId);
+}
+```
+
+## ProductOrderServiceImpl.java
+
+```text
+package com.ybchen.order_service.service.impl;
+
+import com.ybchen.order_service.domain.ProductOrder;
+import com.ybchen.order_service.service.ProductOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * @ClassName：ProductOrderServiceImpl
+ * @Description：产品订单实现类
+ * @Author：chenyb
+ * @Date：2020/11/2 11:34 下午
+ * @Versiion：1.0
+ */
+@Service
+public class ProductOrderServiceImpl implements ProductOrderService {
+    @Autowired
+    private RestTemplate restTemplate;
+    /**
+     * 下单接口
+     * @param userId 用户id
+     * @param productId 产品id
+     * @return
+     */
+    @Override
+    public ProductOrder save(int userId, int productId) {
+        Object obj=productId;
+        //get方式
+        Object forObject = restTemplate.getForObject("http://product-service/api/v1/product/findById?id=" + productId, Object.class);
+        //post方式
+//        Map<String,String> map=new HashMap<>();
+//        map.put("id","1");
+//        String s = restTemplate.postForObject("http://product-service/api/v1/product/test", map, String.class);
+//        System.out.println(s);
+        System.out.println(forObject);
+        //获取商品详情
+        ProductOrder productOrder=new ProductOrder();
+        productOrder.setTradeNo(UUID.randomUUID().toString());
+        productOrder.setCreateTime(new Date());
+        productOrder.setUserId(userId+"");
+        return productOrder;
+    }
+}
+```
+
+## 测试负载均衡
+
+![](./images/images/img_013_b9eb89e9e87a.gif)
+
+![](./images/images/img_014_5169b84ad194.gif)
+
+# feign实战
+
+## 简介
+
+　　改造订单服务，调用商品服务获取商品信息
+
+## 官网例子
+
+[点我直达](https://spring.io/projects/spring-cloud-openfeign)
+
+## 改造订单服务
+
+### 添加feign依赖
+
+```text
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+```
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>order_service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>order_service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--openfeign依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+### 启动类上添加注解
+
+　　启动类上添加：@EnableFeignClients
+
+![](./images/images/img_015_79feabc19d05.png)
+
+### 添加一个接口
+
+![](./images/images/img_016_638d83bcb7bc.png)
+
+ProductClient.java
+
+```text
+package com.ybchen.order_service.service;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * 商品服务客户端
+ */
+// name=商品服务的服务名==========》spring.application.name=product-service
+@FeignClient(name = "product-service")
+@RequestMapping("/api/v1/product")
+public interface ProductClient {
+
+    @GetMapping("findById")
+    String findById(@RequestParam("id") int id);
+}
+```
+
+### 修改ProductOrderServiceImpl.java
+
+原先
+
+```text
+package com.ybchen.order_service.service.impl;
+
+import com.ybchen.order_service.domain.ProductOrder;
+import com.ybchen.order_service.service.ProductOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * @ClassName：ProductOrderServiceImpl
+ * @Description：产品订单实现类
+ * @Author：chenyb
+ * @Date：2020/11/2 11:34 下午
+ * @Versiion：1.0
+ */
+@Service
+public class ProductOrderServiceImpl implements ProductOrderService {
+    @Autowired
+    private RestTemplate restTemplate;
+    /**
+     * 下单接口
+     * @param userId 用户id
+     * @param productId 产品id
+     * @return
+     */
+    @Override
+    public ProductOrder save(int userId, int productId) {
+        Object obj=productId;
+        //get方式
+        Object forObject = restTemplate.getForObject("http://product-service/api/v1/product/findById?id=" + productId, Object.class);
+        //post方式
+//        Map<String,String> map=new HashMap<>();
+//        map.put("id","1");
+//        String s = restTemplate.postForObject("http://product-service/api/v1/product/test", map, String.class);
+//        System.out.println(s);
+        System.out.println(forObject);
+        //获取商品详情
+        ProductOrder productOrder=new ProductOrder();
+        productOrder.setTradeNo(UUID.randomUUID().toString());
+        productOrder.setCreateTime(new Date());
+        productOrder.setUserId(userId+"");
+        return productOrder;
+    }
+}
+```
+
+修改为
+
+![](./images/images/img_017_19052e3422df.png)
+
+```text
+package com.ybchen.order_service.service.impl;
+
+import com.ybchen.order_service.domain.ProductOrder;
+import com.ybchen.order_service.service.ProductClient;
+import com.ybchen.order_service.service.ProductOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.UUID;
+
+/**
+ * @ClassName：ProductOrderServiceImpl
+ * @Description：产品订单实现类
+ * @Author：chenyb
+ * @Date：2020/11/2 11:34 下午
+ * @Versiion：1.0
+ */
+@Service
+public class ProductOrderServiceImpl implements ProductOrderService {
+    @Autowired
+    private ProductClient productClient;
+
+    /**
+     * 下单接口
+     *
+     * @param userId    用户id
+     * @param productId 产品id
+     * @return
+     */
+    @Override
+    public ProductOrder save(int userId, int productId) {
+        //-----------调用商品服务开始------------
+        String byId = productClient.findById(productId);
+        System.out.println(byId);
+        //-----------调用商品服务结束------------
+        //获取商品详情
+        ProductOrder productOrder = new ProductOrder();
+        productOrder.setTradeNo(UUID.randomUUID().toString());
+        productOrder.setCreateTime(new Date());
+        productOrder.setUserId(userId + "");
+        return productOrder;
+    }
+}
+```
+
+## 测试商品服务
+
+![](./images/images/img_018_9f49014bba80.gif)
+
+## 补充(设置服务调用超时时间)
+
+　　默认连接10秒，读取60秒，但是由于hystrix默认是1秒超时
+
+官网案例，[点我直达](https://cloud.spring.io/spring-cloud-static/spring-cloud-openfeign/2.1.5.RELEASE/single/spring-cloud-openfeign.html)
+
+![](./images/images/img_019_fdaa0bfa6963.gif)
+
+![](./images/images/img_020_bce351620beb.gif)
+
+![](./images/images/img_021_9b65a081eeb5.gif)
+
+application.properties
+
+```text
+# 设置连接和读取超时时间
+feign.client.config.default.connect-timeout=5000
+feign.client.config.default.read-timeout=1100
+```
+
+# 服务降级熔断(Hystrix)
+
+## 为什么要用？
+
+　　在一个分布式系统里，一个服务依赖多个服务，可能存在某个服务调用失败，比如超时、异常等，如何能保证在一个依赖出问题的情况下，不会导致整体服务故障，可以通过Hystrix来解决。
+
+## 官网例子
+
+[点我直达](https://spring.io/)
+
+![](./images/images/img_022_a6bbe1390468.gif)
+
+![](./images/images/img_023_6870ab7dc2af.gif)
+
+![](./images/images/img_024_48b4db221b25.gif)
+
+## 修改订单服务
+
+### 添加依赖
+
+```text
+        <!--hystrix依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+```
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>order_service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>order_service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--openfeign依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--hystrix依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+View Code
+
+### 启动类加注解
+
+　　@EnableCircuitBreaker
+
+![](./images/images/img_025_217104dc3dbc.png)
+
+### 修改控制层
+
+　　添加注解，**@HystrixCommand**，并**定义回调方法**，返回值、入参必须一致！！！！
+
+![](./images/images/img_026_c19294bfd596.png)
+
+入参、返回值，不一致会报错
+
+![](./images/images/img_027_36e2852e3d64.png)
+
+# feign结合Hystrix
+
+## 修改订单服务
+
+### 开启hystrix
+
+![](./images/images/img_028_8d9d7c63aab4.png)
+
+```text
+# 开启hystrix
+feign.hystrix.enabled=true
+```
+
+### ProductClient.java
+
+![](./images/images/img_029_00d2997d4ddb.png)
+
+```text
+package com.ybchen.order_service.service;
+
+import com.ybchen.order_service.fallback.ProductClientFallBack;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 商品服务客户端
+ */
+// name=商品服务的服务名==========》spring.application.name=product-service
+@FeignClient(name = "product-service",fallback = ProductClientFallBack.class)
+//@RequestMapping("/api/v1/product")
+public interface ProductClient {
+
+    @GetMapping("/api/v1/product/findById")
+    String findById(@RequestParam("id") int id);
+}
+```
+
+### ProductClientFallBack.java
+
+![](./images/images/img_030_61fda89a0ed0.png)
+
+```text
+package com.ybchen.order_service.fallback;
+
+import com.ybchen.order_service.service.ProductClient;
+import org.springframework.stereotype.Component;
+
+/**
+ * 针对商品服务，做降级处理
+ */
+@Component
+public class ProductClientFallBack implements ProductClient {
+    @Override
+    public String findById(int id) {
+        System.out.println("商品服务被降级了~~~~~~~");
+        return null;
+    }
+}
+```
+
+## 验证商品服务熔断
+
+![](./images/images/img_031_93fda56ec0df.gif)
+
+　　为什么对商品服务做了熔断，还返回这个结果呢，那是因为service实现类，内部发生了错误
+
+![](./images/images/img_032_8215171585c2.png)
+
+# 熔断降级服务报警通知(重要)
+
+　　下面写一些伪代码，比如：xxx微服务挂了，然后通过短信、邮件的方式，通知相应的开发人员，紧急处理事故等。
+
+## 修改订单服务
+
+![](./images/images/img_033_f64d86b40e3b.png)
+
+# 修改hystrix超时时间
+
+## 禁用超时时间(不推荐)
+
+```text
+hystrix.command.default.execution.timeout.enabled=false
+```
+
+## 设置超时时间(推荐)
+
+```text
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=4000
+```
+
+![](./images/images/img_034_bf4c3bb710be.png)
+
+## 源码位置讲解
+
+　　通过这种方法，还可以设置更多的hystrix默认值
+
+![](./images/images/img_035_576076ee3fd4.gif)
+
+![](./images/images/img_036_b3e605a1f5b3.gif)
+
+# 断路器Dashboard监控仪表盘
+
+## 修改订单服务
+
+### 添加依赖
+
+```text
+        <!--hystrix仪表盘-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+```
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.18.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>order_service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>order_service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--openfeign依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--hystrix依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        <!--hystrix仪表盘-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+pom.xml
+
+### 启动类上加注解
+
+　　添加：@EnableHystrixDashboard
+
+![](./images/images/img_037_77ee6390d0ab.png)
+
+### 修改配置文件
+
+```text
+# 暴露全部的监控信息
+management.endpoints.web.exposure.include=*
+```
+
+![](./images/images/img_038_799d44a5a0af.gif)
+
+### 访问仪表盘
+
+```text
+http://127.0.0.1:8781/hystrix
+
+http://127.0.0.1:8781/actuator/hystrix.stream
+```
+
+![](./images/images/img_039_34a79e4635b5.gif)
+
+　　仪表盘实际工作中用处不大(仁者见仁智者见智)，纯属学习用，具体参数，请自行百度，**只要把微服务熔断/降级报警通知处理好，比啥都好**👍
+
+# 微服务网关Zuul
+
+## 创建项目
+
+![](./images/images/img_040_d83ea2a53187.gif)
+
+## 项目结构
+
+![](./images/images/img_041_8793187f5635.png)
+
+### pom.xml
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.11.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.ybchen</groupId>
+    <artifactId>api-gateway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>api-gateway</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+pom.xml
+
+### application.properties
+
+```text
+server.port=8800
+# 服务名称
+spring.application.name=api-gateway
+# 将服务注册到注册中心，eureka_service的地址
+eureka.client.service-url.defaultZone:http://localhost:8761/eureka/
+```
+
+### 默认访问规则
+
+　　http://gateway:port/service-id/**
+
+　　比如，原先下单地址：127.0.0.1:8781/api/v1/order/save?user_id=1&product_id=1
+
+　　现在下单地址：127.0.0.1:8800/order-service/api/v1/order/save?user_id=1&product_id=1
+
+![](./images/images/img_042_53b173db3e4e.gif)
+
+## 自定义路由规则
+
+　　添加application.properties信息
+
+![](./images/images/img_043_13e5584eed51.png)
+
+```text
+# 自定义路由规则，语法：zuul.routes.服务名=自定义路由
+zuul.routes.order-service=/apigate/**
+# 不让默认的服务对外暴露接口，语法：zuul.ignored-patterns=服务名
+zuul.ignored-patterns=/order-service/**
+# 忽略所有服务
+# zuul.ignored-patterns=*
+```
+
+## 处理http请求头为空的问题
+
+ 　　默认zuul过滤3个值("**Cookie**", "**Set-Cookie**", "**Authorization**")，解决版本，设置为不过滤
+
+![](./images/images/img_044_cc6cbfddda04.gif)
+
+![](./images/images/img_045_a09367e6fbf3.gif)
+
+### 源码解读
+
+![](./images/images/img_046_a62525df17a5.gif)
+
+### 添加属性
+
+```text
+# 处理http请求头为空的问题
+zuul.sensitive-headers=
+```
+
+# 自定义Zuul过滤器之登录鉴权
+
+## 改造api-gateway项目
+
+### 新建LoginFilter类
+
+　　新建该类，并继承ZuulFilter，重写里面的方法
+
+![](./images/images/img_047_41f231accb49.png)
+
+```text
+package com.ybchen.apigateway.filter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
+
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+
+/**
+ * @ClassName：LoginFilter
+ * @Description：登录过滤器
+ * @Author：chenyb
+ * @Date：2020/11/8 11:16 下午
+ * @Versiion：1.0
+ */
+@Component //让Spring扫描到
+public class LoginFilter extends ZuulFilter {
+    /**
+     * 过滤类型，有以下类型
+     * 1、pre
+     * 2、route
+     * 3、post
+     * 4、error
+     *
+     * @return
+     */
+    @Override
+    public String filterType() {
+        return PRE_TYPE;
+    }
+
+    /**
+     * 过滤器顺序，越小越先执行
+     *
+     * @return
+     */
+    @Override
+    public int filterOrder() {
+        return 4;
+    }
+
+    /**
+     * 过滤器是否生效
+     *
+     * @return
+     */
+    @Override
+    public boolean shouldFilter() {
+        //1、获取上下文
+        RequestContext currentContext = RequestContext.getCurrentContext();
+        //2、获取HttpServletRequest
+        HttpServletRequest request = currentContext.getRequest();
+        //3、拿到请求路径，判断是否进行拦截
+        //System.out.println(request.getRequestURL()); //http://127.0.0.1:8800/apigate/order/api/v1/order/save
+        //System.out.println(request.getRequestURI()); ///apigate/order/api/v1/order/save
+        String url = request.getRequestURI();
+        System.out.println("请求路径url=========>" + url);
+        if ((url == null ? "" : url.toLowerCase()).startsWith("/apigate/order")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 过滤器逻辑，业务逻辑
+     *
+     * @return
+     * @throws ZuulException
+     */
+    @Override
+    public Object run() throws ZuulException {
+        System.out.println("请求被拦截啦==============");
+        //JWT方式
+        //1、获取上下文
+        RequestContext currentContext = RequestContext.getCurrentContext();
+        //2、获取HttpServletRequest
+        HttpServletRequest request = currentContext.getRequest();
+        //3、拿到token
+        String token = request.getHeader("token"); //请求头拿token
+        if (token == null || "".equals(token)) {
+            token = request.getParameter("token"); //get方式拿token
+        }
+        //登录校验逻辑，这里推荐JWT方式，做登录鉴权
+        if (token == null || "".equals(token)) {
+            //4、不让继续往下走
+            currentContext.setSendZuulResponse(false);
+            //5、设置状态码，401，Unauthorized
+            currentContext.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());
+            sendJsonMessage(currentContext.getResponse(),"用户未登录");
+        }
+        return null;
+    }
+    /**
+     * 响应json数据给前端
+     *
+     * @param response
+     * @param obj
+     */
+    private void sendJsonMessage(HttpServletResponse response, Object obj) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter writer = response.getWriter();
+            writer.print(objectMapper.writeValueAsString(obj));
+            writer.close();
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+## 用户登录鉴权测试
+
+![](./images/images/img_048_976fc979c403.gif)
+
+## 补充
+
+　　登录鉴权，推荐使用JWT方式，下面我提供我之前的一个项目，JWT的工具类，和拦截器的部分关键代码
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+```
+
+pom.xml依赖
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+package net.ybclass.online_ybclass.utils;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import net.ybclass.online_ybclass.model.entity.User;
+
+import java.util.Date;
+
+/**
+ * JWT工具类
+ * 注意点：
+ * 1、生成的token，是可以通过base64进行解密出铭文信息
+ * 2、base64进行解密出明文信息，修改再进行编码，则会解密失败
+ * 3、无法作废已颁布的token，除非改密钥
+ */
+public class JWTUtils {
+    /**
+     * 过期时间，一周
+     */
+    static final long EXPIRE = 60000 * 60 * 24 * 7;
+    /**
+     * 加密密钥
+     */
+    private static final String SECRET = "ybclass.net168";
+    /**
+     * 令牌前缀
+     */
+    private static final String TOKEN_PREFIX = "ybclass";
+    /**
+     * 主题
+     */
+    private static final String SUBJECT = "ybclass";
+
+    /**
+     * 根据用户信息，生成令牌
+     *
+     * @param user
+     * @return
+     */
+    public static String geneJsonWebToken(User user) {
+        String token = Jwts.builder().setSubject(SUBJECT)
+                .claim("head_img", user.getHeadImg())
+                .claim("id", user.getId())
+                .claim("name", user.getName())
+                .setIssuedAt(new Date()) //令牌颁布时间
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE)) //过期时间
+                .signWith(SignatureAlgorithm.HS256, SECRET) //加密方式
+                .compact();
+        token = TOKEN_PREFIX + token;
+        return token;
+    }
+
+    /**
+     * 校验token方法
+     *
+     * @param token
+     * @return
+     */
+    public static Claims checkJWT(String token) {
+        try {
+            final Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET)
+                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                    .getBody();
+            return claims;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
+```
+
+JWTUtils.java
+
+![](./images/images/img_008_8f900a89c634.gif)
+![](./images/images/img_009_961ddebeb323.gif)
+
+```text
+try {
+            String accesToken = request.getHeader("token");
+            if (accesToken == null) {
+                accesToken = request.getParameter("token");
+            }
+            if (StringUtils.isNoneBlank(accesToken)) {
+                Claims claims = JWTUtils.checkJWT(accesToken);
+                if (claims == null) {
+                    sendJsonMessage(response, JsonData.buildError("登陆过期，请重新登陆"));
+                    //告诉登陆过期，重新登陆
+                    return false;
+                }
+                Integer id = (Integer) claims.get("id");
+                String name = (String) claims.get("name");
+                request.setAttribute("user_id", id);
+                request.setAttribute("name", name);
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        //登陆失败
+        sendJsonMessage(response, JsonData.buildError("登陆过期，请重新登陆"));
+        return false;
+
+=================
+        User user = userMapper.findByPhoneAndPwd(phone, CommonUtils.MD5(pwd));
+        return user == null ? null : JWTUtils.geneJsonWebToken(user);
+```
+
+拦截器部分代码
+
+# 网关Zuul接口限流
+
+　　采用谷歌guava框架，网关限流
+
+## 改造api-gateway项目
+
+### 创建OrderRatelimiterFilter
+
+　　然后继承ZuulFilter，并使用springcloud继承的guava技术，只针对订单接口限流！！！
+
+![](./images/images/img_049_01871b9a3375.png)
+
+```text
+package com.ybchen.apigateway.filter;
+
+import com.google.common.util.concurrent.RateLimiter;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
+import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+
+/**
+ * @ClassName：OrderRateLimiterFilter
+ * @Description：订单接口限流
+ * @Author：chenyb
+ * @Date：2020/11/9 11:32 下午
+ * @Versiion：1.0
+ */
+public class OrderRateLimiterFilter extends ZuulFilter {
+    //限流令牌，每秒创建多少令牌，注意：springcloud 默认集成guava
+    private static final RateLimiter RATE_LIMITER = RateLimiter.create(1000);
+
+    @Override
+    public String filterType() {
+        return PRE_TYPE;
+    }
+
+    @Override
+    public int filterOrder() {
+        return -4;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        //1、获取上下文
+        RequestContext currentContext = RequestContext.getCurrentContext();
+        //2、获取HttpServletRequest
+        HttpServletRequest request = currentContext.getRequest();
+        String url = request.getRequestURI();
+        System.out.println("限流请求路径url=========>" + url);
+        //只对订单接口限流
+        if ((url == null ? "" : url.toLowerCase()).startsWith("/apigate/order")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object run() throws ZuulException {
+        RequestContext currentContext = RequestContext.getCurrentContext();
+        HttpServletRequest request = currentContext.getRequest();
+        if (!RATE_LIMITER.tryAcquire()) {
+            currentContext.setSendZuulResponse(false);
+            currentContext.setResponseStatusCode(HttpStatus.TOO_MANY_REQUESTS.value());
+        }
+        return null;
+    }
+}
+```
+
+# Zuul集群
+
+　　技术栈：nginx+lvs+keepalive
+
+![](./images/images/img_050_92e0daf877b4.png)
+
+# 案例源码下载
+
+```text
+链接: https://pan.baidu.com/s/1bNIh-8nSCMcU7FjVVzlBnA  密码: 4wf9
+```
