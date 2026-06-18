@@ -48,6 +48,12 @@
     };
 
     input.addEventListener("input", update);
+    window.addEventListener("pageshow", update);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        update();
+      }
+    });
     update();
   })();
 </script>
