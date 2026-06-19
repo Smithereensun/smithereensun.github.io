@@ -43,6 +43,11 @@ timeZone = "Asia/Shanghai"
   description = "一个聚焦学习与知识整理的独立网站入口。"
   url = "https://study-km9d.onrender.com/"
 
+[[params.externalLinks]]
+  title = "Dinosaur Game"
+  description = "一个可以直接在线游玩的恐龙小游戏网站。"
+  url = "https://dinosaur-game.pinme.dev"
+
 [[menu.main]]
   name = "首页"
   url = "/"

@@ -62,15 +62,17 @@
         <p class="eyebrow">Projects</p>
         <h2>我的网站</h2>
       </div>
-      <div class="external-grid">
-        {{ range . }}
-          <a class="external-card" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
-            <span class="external-card__eyebrow">Open Link</span>
-            <strong>{{ .title }}</strong>
-            <p>{{ .description }}</p>
-            <span class="external-card__cta">立即访问</span>
-          </a>
-        {{ end }}
+      <div class="external-scroller">
+        <div class="external-grid external-grid--scroll">
+          {{ range . }}
+            <a class="external-card" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
+              <span class="external-card__eyebrow">Open Link</span>
+              <strong>{{ .title }}</strong>
+              <p>{{ .description }}</p>
+              <span class="external-card__cta">立即访问</span>
+            </a>
+          {{ end }}
+        </div>
       </div>
     </section>
   {{ end }}

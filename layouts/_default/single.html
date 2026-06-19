@@ -1,15 +1,17 @@
 {{ define "main" }}
   <article class="article">
     <header class="article-header">
-      <p class="eyebrow">{{ .Section }}</p>
+      <p class="eyebrow">{{ if .Section }}{{ .Section }}{{ else }}Page{{ end }}</p>
       <h1>{{ .Title }}</h1>
-      <div class="article-meta">
-        <span>{{ .Date.Format "2006-01-02" }}</span>
-        <span>{{ .ReadingTime }} min read</span>
-        {{ with .Params.tags }}
-          <span>{{ delimit . " / " }}</span>
-        {{ end }}
-      </div>
+      {{ if eq .Section "posts" }}
+        <div class="article-meta">
+          <span>{{ .Date.Format "2006-01-02" }}</span>
+          <span>{{ .ReadingTime }} min read</span>
+          {{ with .Params.tags }}
+            <span>{{ delimit . " / " }}</span>
+          {{ end }}
+        </div>
+      {{ end }}
       {{ with .Description }}
         <p class="page-lead">{{ . }}</p>
       {{ end }}
@@ -21,15 +23,19 @@
     </div>
 
     <footer class="article-footer">
-      <a href="{{ "/posts/" | relURL }}">返回文章列表</a>
-      <div class="article-nav">
-        {{ with .PrevInSection }}
-          <a href="{{ .RelPermalink }}">上一篇：{{ .Title }}</a>
-        {{ end }}
-        {{ with .NextInSection }}
-          <a href="{{ .RelPermalink }}">下一篇：{{ .Title }}</a>
-        {{ end }}
-      </div>
+      {{ if eq .Section "posts" }}
+        <a href="{{ "/posts/" | relURL }}">返回文章列表</a>
+        <div class="article-nav">
+          {{ with .PrevInSection }}
+            <a href="{{ .RelPermalink }}">上一篇：{{ .Title }}</a>
+          {{ end }}
+          {{ with .NextInSection }}
+            <a href="{{ .RelPermalink }}">下一篇：{{ .Title }}</a>
+          {{ end }}
+        </div>
+      {{ else }}
+        <a href="{{ "/" | relURL }}">返回首页</a>
+      {{ end }}
     </footer>
   </article>
 {{ end }}
