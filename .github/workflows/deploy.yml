@@ -28,7 +28,7 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --gc --minify --baseURL "https://smithereensun.github.io/"
+        run: hugo --gc --minify --baseURL "https://zrozp.xyz/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
