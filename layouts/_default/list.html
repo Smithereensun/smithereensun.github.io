@@ -41,7 +41,9 @@
     {{ range $allPages }}
       <a class="search-result" href="{{ .RelPermalink }}" data-search-result-item data-search-title="{{ .Title | lower }}">
         <strong>{{ .Title }}</strong>
-        <span>{{ .Date.Format "2006-01-02" }}</span>
+        {{ if and (ne .Site.Params.showPostDates false) (ne .Params.has_date false) }}
+          <span>{{ .Date.Format "2006-01-02" }}</span>
+        {{ end }}
       </a>
     {{ end }}
   </div>

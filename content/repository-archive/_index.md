@@ -10,9 +10,9 @@ layout: repository-archive
 ```json
 {
   "threshold_mb": 5,
-  "count": 84,
-  "asset_files": 1849,
-  "asset_bytes": 3461587894,
+  "count": 96,
+  "asset_files": 2058,
+  "asset_bytes": 3558373704,
   "items": [
     {
       "title": "Claude code入门",
@@ -21,6 +21,33 @@ layout: repository-archive
       "asset_files": 7,
       "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2026-04-19-19891034-a09fa402-claude-code入门",
       "path": "repository-archive/posts/2026-04-19-19891034-a09fa402-claude-code入门"
+    },
+    {
+      "title": "Agent设计模式介绍",
+      "date": "2026-04-19",
+      "has_date": true,
+      "asset_bytes": 12826180,
+      "asset_files": 37,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-agent-agent-design-pattern-summary-agent设计模式介绍",
+      "path": "repository-archive/posts/markdown-ai-agent-agent-design-pattern-summary-agent设计模式介绍"
+    },
+    {
+      "title": "MCP入门知识",
+      "date": "2026-04-19",
+      "has_date": true,
+      "asset_bytes": 9360292,
+      "asset_files": 14,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-mcp-summary-mcp入门知识",
+      "path": "repository-archive/posts/markdown-ai-mcp-summary-mcp入门知识"
+    },
+    {
+      "title": "RAG设计模式介绍",
+      "date": "2026-04-19",
+      "has_date": true,
+      "asset_bytes": 11000320,
+      "asset_files": 22,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-rag-design-rag设计模式介绍",
+      "path": "repository-archive/posts/markdown-ai-rag-design-rag设计模式介绍"
     },
     {
       "title": "0基础教你快速写自己的Agent Skills",
@@ -37,6 +64,33 @@ layout: repository-archive
       "asset_files": 4,
       "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2026-02-07-19561633-61f319e9-ai-编辑器qoder",
       "path": "repository-archive/posts/2026-02-07-19561633-61f319e9-ai-编辑器qoder"
+    },
+    {
+      "title": "Kafka - 高级使用",
+      "date": "2025-12-21",
+      "has_date": true,
+      "asset_bytes": 8763447,
+      "asset_files": 54,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-microservices-message-queue-kafka-advancedusage-kafka-高级使用",
+      "path": "repository-archive/posts/markdown-microservices-message-queue-kafka-advancedusage-kafka-高级使用"
+    },
+    {
+      "title": "TCP - 半连接队列和全连接队列",
+      "date": "2025-05-17",
+      "has_date": true,
+      "asset_bytes": 7082014,
+      "asset_files": 41,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-cs-basics-network-02-tcp3-queue-tcp-半连接队列和全连接队列",
+      "path": "repository-archive/posts/markdown-cs-basics-network-02-tcp3-queue-tcp-半连接队列和全连接队列"
+    },
+    {
+      "title": "万字长文带你窥探Spring中所有的扩展点",
+      "date": "2025-05-17",
+      "has_date": true,
+      "asset_bytes": 6413683,
+      "asset_files": 2,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-framework-spring-extentions-use-万字长文带你窥探spring中所有的扩展点",
+      "path": "repository-archive/posts/markdown-framework-spring-extentions-use-万字长文带你窥探spring中所有的扩展点"
     },
     {
       "title": "手把手教学 本地jar上传maven中央仓库🚀🚀🚀",
@@ -685,14 +739,74 @@ layout: repository-archive
       "asset_files": 28,
       "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2019-09-25-11583272-bea60440-net-wcf服务部署iis详细解析",
       "path": "repository-archive/posts/2019-09-25-11583272-bea60440-net-wcf服务部署iis详细解析"
+    },
+    {
+      "title": "20、包含min函数的栈",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 7103757,
+      "asset_files": 6,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-20-minstack-20-包含min函数的栈",
+      "path": "repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-20-minstack-20-包含min函数的栈"
+    },
+    {
+      "title": "21、栈的压⼊、弹出序列",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 7532725,
+      "asset_files": 6,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-21-ispoporder-21-栈的压-弹出序列",
+      "path": "repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-21-ispoporder-21-栈的压-弹出序列"
+    },
+    {
+      "title": "29、最⼩的k个数",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 5721145,
+      "asset_files": 5,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-29-getleastnumbers-29-最-的k个数",
+      "path": "repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-29-getleastnumbers-29-最-的k个数"
+    },
+    {
+      "title": "44、翻转单词序列",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 7483838,
+      "asset_files": 6,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-44-reversesentence-44-翻转单词序列",
+      "path": "repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-44-reversesentence-44-翻转单词序列"
+    },
+    {
+      "title": "63、数据流中的中位数",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 7663017,
+      "asset_files": 6,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-63-getmedian-63-数据流中的中位数",
+      "path": "repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-63-getmedian-63-数据流中的中位数"
+    },
+    {
+      "title": "时间轮在Netty,Kafka中的设计与实现",
+      "date": "",
+      "has_date": false,
+      "asset_bytes": 5835392,
+      "asset_files": 10,
+      "github_url": "https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-interview-system-design-system-design-design-of-time-wheels-in-netty-and-kafka-时间轮在netty-kafka中的设计与实现",
+      "path": "repository-archive/posts/markdown-interview-system-design-system-design-design-of-time-wheels-in-netty-and-kafka-时间轮在netty-kafka中的设计与实现"
     }
   ]
 }
 ```
 
 - [Claude code入门](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2026-04-19-19891034-a09fa402-claude-code入门) · 2026-04-19 · 12.8MB · 7 张资源
+- [Agent设计模式介绍](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-agent-agent-design-pattern-summary-agent设计模式介绍) · 2026-04-19 · 12.2MB · 37 张资源
+- [MCP入门知识](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-mcp-summary-mcp入门知识) · 2026-04-19 · 8.9MB · 14 张资源
+- [RAG设计模式介绍](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-ai-rag-design-rag设计模式介绍) · 2026-04-19 · 10.5MB · 22 张资源
 - [0基础教你快速写自己的Agent Skills](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2026-04-05-19824343-f19e3c70-0基础教你快速写自己的agent-skills) · 2026-04-05 · 8.5MB · 5 张资源
 - [AI 编辑器Qoder](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2026-02-07-19561633-61f319e9-ai-编辑器qoder) · 2026-02-07 · 5.7MB · 4 张资源
+- [Kafka - 高级使用](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-microservices-message-queue-kafka-advancedusage-kafka-高级使用) · 2025-12-21 · 8.4MB · 54 张资源
+- [TCP - 半连接队列和全连接队列](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-cs-basics-network-02-tcp3-queue-tcp-半连接队列和全连接队列) · 2025-05-17 · 6.8MB · 41 张资源
+- [万字长文带你窥探Spring中所有的扩展点](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-framework-spring-extentions-use-万字长文带你窥探spring中所有的扩展点) · 2025-05-17 · 6.1MB · 2 张资源
 - [手把手教学 本地jar上传maven中央仓库🚀🚀🚀](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2025-03-04-18749707-dd72099b-手把手教学-本地jar上传maven中央仓库) · 2025-03-04 · 8.7MB · 13 张资源
 - [WebUi爬虫自动化测试 Selenium4.X+Java教程](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2024-07-08-18288029-a16a23bb-webui爬虫自动化测试-selenium4-x-java教程) · 2024-07-08 · 43.7MB · 13 张资源
 - [Mac postman调分页接口，导出csv](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2023-11-17-17837696-413044c5-mac-postman调分页接口-导出csv) · 2023-11-17 · 19.8MB · 10 张资源
@@ -774,3 +888,9 @@ layout: repository-archive
 - [eclipse配置Tomcat The superclass "javax.servlet.http.HttpServlet" was not found on the Java Build Path](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2019-11-26-11936111-4b5356cc-eclipse配置tomcat-the-superclass-javax-servlet-http-httpservle) · 2019-11-26 · 6.3MB · 4 张资源
 - [Spring源码分析](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2019-10-31-11756034-c905b6c9-spring源码分析) · 2019-10-31 · 11.2MB · 74 张资源
 - [.Net WCF服务部署IIS详细解析](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/2019-09-25-11583272-bea60440-net-wcf服务部署iis详细解析) · 2019-09-25 · 8.7MB · 28 张资源
+- [20、包含min函数的栈](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-20-minstack-20-包含min函数的栈) · 6.8MB · 6 张资源
+- [21、栈的压⼊、弹出序列](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-21-ispoporder-21-栈的压-弹出序列) · 7.2MB · 6 张资源
+- [29、最⼩的k个数](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-29-getleastnumbers-29-最-的k个数) · 5.5MB · 5 张资源
+- [44、翻转单词序列](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-44-reversesentence-44-翻转单词序列) · 7.1MB · 6 张资源
+- [63、数据流中的中位数](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-algorithmsguide-sword-finger-offer-queue-stack-heap-63-getmedian-63-数据流中的中位数) · 7.3MB · 6 张资源
+- [时间轮在Netty,Kafka中的设计与实现](https://github.com/Smithereensun/smithereensun.github.io/tree/main/repository-archive/posts/markdown-interview-system-design-system-design-design-of-time-wheels-in-netty-and-kafka-时间轮在netty-kafka中的设计与实现) · 5.6MB · 10 张资源

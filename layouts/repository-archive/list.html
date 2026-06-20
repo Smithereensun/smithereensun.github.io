@@ -41,7 +41,9 @@
       {{ $sizeMB := div (float (index . "asset_bytes")) 1048576.0 }}
       <a class="archive-item" href="{{ index . "github_url" }}" target="_blank" rel="noopener noreferrer" data-search-item data-search-title="{{ lower (index . "title") }}">
         <div class="archive-item__meta">
-          <span>{{ index . "date" }}</span>
+          {{ if and (ne $.Site.Params.showPostDates false) (ne (index . "has_date") false) (index . "date") }}
+            <span>{{ index . "date" }}</span>
+          {{ end }}
           <span>{{ printf "%.1fMB" $sizeMB }}</span>
         </div>
         <h3>{{ index . "title" }}</h3>
@@ -58,7 +60,9 @@
     {{ range $items }}
       <a class="search-result" href="{{ index . "github_url" }}" target="_blank" rel="noopener noreferrer" data-search-result-item data-search-title="{{ lower (index . "title") }}">
         <strong>{{ index . "title" }}</strong>
-        <span>{{ index . "date" }}</span>
+        {{ if and (ne $.Site.Params.showPostDates false) (ne (index . "has_date") false) (index . "date") }}
+          <span>{{ index . "date" }}</span>
+        {{ end }}
       </a>
     {{ end }}
   </div>

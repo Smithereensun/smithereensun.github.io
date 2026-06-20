@@ -32,6 +32,7 @@ timeZone = "Asia/Shanghai"
   secondaryCTAURL = "/about/"
   github = "https://github.com/Smithereensun/smithereensun.github.io"
   email = "mailto:you@example.com"
+  showPostDates = true
 
 [[params.externalLinks]]
   title = "Relay Hub"

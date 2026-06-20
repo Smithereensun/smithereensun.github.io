@@ -1,0 +1,116 @@
+{
+
+  "title": "MyBatis动态SQL是如何突破传统SQL的限制的？",
+  "has_date": true,
+  "description": "引入 我们在使用mybatis的时候，会在xml中编写sql语句。比如这段动态sql代码： 动态sql配置详解：https://mybatis.org/mybatis-3/dynamic-sql.html mybatis底层是如何构造这段sql的？ 关于动态SQL的接口和类 SqlNode接口，简单",
+  "tags": [
+    "框架",
+    "ORM"
+  ],
+  "source": "local-markdown-library",
+  "source_path": "framework/orm/mybatis-principleofdynamicSQL - MyBatis动态SQL是如何突破传统SQL的限制的？.md",
+  "date": "2026-02-27"
+
+}
+
+## [引入](#引入)
+
+我们在使用mybatis的时候，会在xml中编写sql语句。比如这段动态sql代码：
+
+动态sql配置详解：[https://mybatis.org/mybatis-3/dynamic-sql.html](https://mybatis.org/mybatis-3/dynamic-sql.html)
+
+mybatis底层是如何构造这段sql的？
+
+## [关于动态SQL的接口和类](#关于动态sql的接口和类)
+
+SqlNode接口，简单理解就是xml中的每个标签，比如上述sql的update,trim,if标签：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/b80633474c31-202404291757570.png)
+SqlSource Sql源接口，代表从xml文件或注解映射的sql内容，主要就是用于创建BoundSql，有实现类DynamicSqlSource(动态Sql源)，StaticSqlSource(静态Sql源)等：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/9ec0902a3e14-202404291757624.png)
+BoundSql类，封装mybatis最终产生sql的类，包括sql语句，参数，参数源数据等参数：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/d21d6c71a440-202404291757646.png)
+XNode，一个Dom API中的Node接口的扩展类：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/993f5f07cadc-202404291757867.png)
+BaseBuilder接口及其实现类(属性，方法省略了，大家有兴趣的自己看),这些Builder的作用就是用于构造sql：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/48de9374adc1-202404291757991.png)
+下面我们简单分析下其中4个Builder：
+
+- **XMLConfigBuilder**：解析mybatis中configLocation属性中的全局xml文件，内部会使用XMLMapperBuilder解析各个xml文件。
+
+- **XMLMapperBuilder**：遍历mybatis中mapperLocations属性中的xml文件中每个节点的Builder，比如user.xml，内部会使用XMLStatementBuilder处理xml中的每个节点。
+
+- **XMLStatementBuilder**：解析xml文件中各个节点，比如select,insert,update,delete节点，内部会使用XMLScriptBuilder处理节点的sql部分，遍历产生的数据会丢到Configuration的mappedStatements中。
+
+- **XMLScriptBuilder**：解析xml中各个节点sql部分的Builder。
+
+LanguageDriver接口及其实现类(属性，方法省略了，大家有兴趣的自己看)，该接口主要的作用就是构造sql:
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/3848d667eab8-202404291757642.png)
+简单分析下XMLLanguageDriver(处理xml中的sql，RawLanguageDriver处理静态sql)：XMLLanguageDriver内部会使用XMLScriptBuilder解析xml中的sql部分。
+
+## [源码分析](#源码分析)
+
+Spring与Mybatis整合的时候需要配置SqlSessionFactoryBean，该配置会加入数据源和mybatis xml配置文件路径等信息：
+
+我们就分析这一段配置背后的细节：
+
+SqlSessionFactoryBean实现了Spring的InitializingBean接口，InitializingBean接口的afterPropertiesSet方法中会调用buildSqlSessionFactory方法 该方法内部会使用XMLConfigBuilder解析属性configLocation中配置的路径，还会使用XMLMapperBuilder属性解析mapperLocations属性中的各个xml文件。部分源码如下：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/d1e229a62fda-202404291757810.png)
+由于XMLConfigBuilder内部也是使用XMLMapperBuilder，我们就看看XMLMapperBuilder的解析细节：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/662c4558b39d-202404291757628.png)![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/2c21b331a1d5-202404291757552.png)
+我们关注一下，增删改查节点的解析：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/bc7002b09d89-202404291757589.png)
+XMLStatementBuilder的解析：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/fd14a87c498d-202404291757249.png)
+默认会使用XMLLanguageDriver创建SqlSource（Configuration构造函数中设置）。
+
+XMLLanguageDriver创建SqlSource：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/d09e1676d006-202404291757754.png)
+XMLScriptBuilder解析sql：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/b586200d4be9-202404291757940.png)
+得到SqlSource之后，会放到Configuration中，有了SqlSource，就能拿BoundSql了，BoundSql可以得到最终的sql。
+
+## [实例分析](#实例分析)
+
+以下面的xml解析大概说下parseDynamicTags的解析过程：
+
+parseDynamicTags方法的返回值是一个List，也就是一个Sql节点集合。SqlNode本文一开始已经介绍，分析完解析过程之后会说一下各个SqlNode类型的作用。
+
+首先根据update节点(Node)得到所有的子节点，分别是3个子节点：
+
+- 文本节点 \n UPDATE users
+
+- trim子节点 ...
+
+- 文本节点 \n where id = #
+
+遍历各个子节点：
+
+- 如果节点类型是文本或者CDATA，构造一个TextSqlNode或StaticTextSqlNode；
+
+- 如果节点类型是元素，说明该update节点是个动态sql，然后会使用NodeHandler处理各个类型的子节点。这里的NodeHandler是XMLScriptBuilder的一个内部接口，其实现类包括TrimHandler、WhereHandler、SetHandler、IfHandler、ChooseHandler等。看类名也就明白了这个Handler的作用，比如我们分析的trim节点，对应的是TrimHandler；if节点，对应的是IfHandler...这里子节点trim被TrimHandler处理，TrimHandler内部也使用parseDynamicTags方法解析节点。
+
+遇到子节点是元素的话，重复以上步骤：
+
+trim子节点内部有7个子节点，分别是文本节点、if节点、是文本节点、if节点、是文本节点、if节点、文本节点。文本节点跟之前一样处理，if节点使用IfHandler处理。遍历步骤如上所示，下面我们看下几个Handler的实现细节。
+
+IfHandler处理方法也是使用parseDynamicTags方法，然后加上if标签必要的属性：
+
+TrimHandler处理方法也是使用parseDynamicTags方法，然后加上trim标签必要的属性：
+
+以上update方法最终通过parseDynamicTags方法得到的SqlNode集合如下：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/33b88f8163d5-202404291757456.png)
+trim节点：
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/4e78676f525d-202404291757434.png)
+由于这个update方法是个动态节点，因此构造出了DynamicSqlSource。DynamicSqlSource内部就可以构造sql了:
+![](/imported/markdown/2026-02-27-markdown-d5fa3e68-mybatis动态sql是如何突破传统sql的限制的/images/27b94d1ba300-202404291757439.png)
+DynamicSqlSource内部的SqlNode属性是一个MixedSqlNode。然后我们看看各个SqlNode实现类的apply方法。下面分析一下各个SqlNode实现类的apply方法实现：
+
+MixedSqlNode：MixedSqlNode会遍历调用内部各个sqlNode的apply方法。
+
+StaticTextSqlNode：直接append sql文本。
+
+IfSqlNode：这里的evaluator是一个ExpressionEvaluator类型的实例，内部使用了OGNL处理表达式逻辑。
+
+TrimSqlNode：
+
+TrimSqlNode的apply方法也是调用属性contents(一般都是MixedSqlNode)的apply方法，按照实例也就是7个SqlNode，都是StaticTextSqlNode和IfSqlNode。 最后会使用FilteredDynamicContext过滤掉prefix和suffix。
