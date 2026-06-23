@@ -49,6 +49,11 @@ timeZone = "Asia/Shanghai"
   description = "一个可以直接在线游玩的恐龙小游戏网站。"
   url = "https://dinosaur-game.pinme.dev"
 
+[[params.externalLinks]]
+  title = "R2 资源库"
+  description = "个人文件与对象存储管理入口。"
+  url = "https://r2.zrozp.xyz/"
+
 [[menu.main]]
   name = "首页"
   url = "/"
