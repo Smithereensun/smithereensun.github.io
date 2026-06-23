@@ -54,6 +54,11 @@ timeZone = "Asia/Shanghai"
   description = "个人文件与对象存储管理入口。"
   url = "https://r2.zrozp.xyz/"
 
+[[params.externalLinks]]
+  title = "邮件服务"
+  description = "个人邮箱与邮件管理入口。"
+  url = "https://mail.zrozp.xyz/"
+
 [[menu.main]]
   name = "首页"
   url = "/"
