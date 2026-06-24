@@ -538,13 +538,16 @@ p {
 }
 
 .external-scroller {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   padding: 6px 0 10px;
+  overscroll-behavior-inline: contain;
 }
 
 .external-marquee {
   position: relative;
-  margin-inline: calc(var(--space-2) * -1);
+  margin-inline: -18px;
+  scrollbar-width: none;
 }
 
 .external-marquee::before,
@@ -568,6 +571,33 @@ p {
   background: linear-gradient(270deg, var(--paper), rgba(244, 239, 231, 0));
 }
 
+.external-marquee:hover,
+.external-marquee:focus-within,
+.external-marquee.is-pointer-active {
+  overflow-x: auto;
+  cursor: grab;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(51, 92, 255, 0.35) transparent;
+}
+
+.external-marquee.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.external-marquee::-webkit-scrollbar {
+  height: 8px;
+}
+
+.external-marquee::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(51, 92, 255, 0.28);
+}
+
+.external-marquee::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .external-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -578,13 +608,14 @@ p {
   display: flex;
   width: max-content;
   gap: 18px;
-  padding-inline: var(--space-2);
+  padding-inline: 18px;
   animation: external-marquee 34s linear infinite;
   will-change: transform;
 }
 
 .external-marquee:hover .external-marquee__track,
-.external-marquee:focus-within .external-marquee__track {
+.external-marquee:focus-within .external-marquee__track,
+.external-marquee.is-pointer-active .external-marquee__track {
   animation-play-state: paused;
 }
 

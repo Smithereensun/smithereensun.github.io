@@ -56,4 +56,103 @@
     });
     update();
   })();
+
+  (() => {
+    const marquees = Array.from(document.querySelectorAll(".external-marquee"));
+    if (!marquees.length) return;
+
+    marquees.forEach((marquee) => {
+      const track = marquee.querySelector(".external-marquee__track");
+      if (!track) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startScrollLeft = 0;
+
+      const segmentWidth = () => Math.max(1, track.scrollWidth / 2);
+
+      const normalizeScroll = () => {
+        const width = segmentWidth();
+        if (marquee.scrollLeft >= width) {
+          marquee.scrollLeft -= width;
+        } else if (marquee.scrollLeft < 0) {
+          marquee.scrollLeft += width;
+        }
+      };
+
+      const syncScrollFromAnimation = () => {
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(track).transform);
+        const offset = Math.abs(matrix.m41 || 0);
+        marquee.scrollLeft = offset % segmentWidth();
+        track.style.animation = "none";
+        track.style.transform = "translateX(0)";
+      };
+
+      const resumeAnimationFromScroll = () => {
+        const width = segmentWidth();
+        const progress = marquee.scrollLeft / width;
+        const duration = Number.parseFloat(getComputedStyle(track).animationDuration) || 34;
+        track.style.animation = "none";
+        track.style.transform = "";
+        track.offsetHeight;
+        track.style.animation = "";
+        track.style.animationDelay = `${-progress * duration}s`;
+        marquee.scrollLeft = 0;
+      };
+
+      marquee.addEventListener("pointerenter", () => {
+        marquee.classList.add("is-pointer-active");
+        syncScrollFromAnimation();
+      });
+
+      marquee.addEventListener("pointerleave", () => {
+        if (isDragging) return;
+        marquee.classList.remove("is-pointer-active", "is-dragging");
+        resumeAnimationFromScroll();
+      });
+
+      marquee.addEventListener("wheel", (event) => {
+        if (!marquee.classList.contains("is-pointer-active")) return;
+        const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+        if (!delta) return;
+        event.preventDefault();
+        marquee.scrollLeft += delta;
+        normalizeScroll();
+      }, { passive: false });
+
+      marquee.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        isDragging = true;
+        startX = event.clientX;
+        startScrollLeft = marquee.scrollLeft;
+        marquee.classList.add("is-pointer-active", "is-dragging");
+        marquee.setPointerCapture(event.pointerId);
+      });
+
+      marquee.addEventListener("pointermove", (event) => {
+        if (!isDragging) return;
+        event.preventDefault();
+        marquee.scrollLeft = startScrollLeft - (event.clientX - startX);
+        normalizeScroll();
+      });
+
+      const stopDragging = (event) => {
+        if (!isDragging) return;
+        isDragging = false;
+        marquee.classList.remove("is-dragging");
+        if (marquee.hasPointerCapture(event.pointerId)) {
+          marquee.releasePointerCapture(event.pointerId);
+        }
+        const bounds = marquee.getBoundingClientRect();
+        const inside = event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+        if (!inside) {
+          marquee.classList.remove("is-pointer-active");
+          resumeAnimationFromScroll();
+        }
+      };
+
+      marquee.addEventListener("pointerup", stopDragging);
+      marquee.addEventListener("pointercancel", stopDragging);
+    });
+  })();
 </script>
