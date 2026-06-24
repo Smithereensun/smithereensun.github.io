@@ -538,23 +538,34 @@ p {
 }
 
 .external-scroller {
-  overflow-x: auto;
-  padding-bottom: 6px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(51, 92, 255, 0.35) transparent;
+  overflow: hidden;
+  padding: 6px 0 10px;
 }
 
-.external-scroller::-webkit-scrollbar {
-  height: 8px;
+.external-marquee {
+  position: relative;
+  margin-inline: calc(var(--space-2) * -1);
 }
 
-.external-scroller::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(51, 92, 255, 0.28);
+.external-marquee::before,
+.external-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: min(110px, 18vw);
+  height: 100%;
+  pointer-events: none;
 }
 
-.external-scroller::-webkit-scrollbar-track {
-  background: transparent;
+.external-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--paper), rgba(244, 239, 231, 0));
+}
+
+.external-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--paper), rgba(244, 239, 231, 0));
 }
 
 .external-grid {
@@ -563,11 +574,28 @@ p {
   gap: 18px;
 }
 
-.external-grid--scroll {
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 360px);
-  grid-template-columns: none;
+.external-marquee__track {
+  display: flex;
   width: max-content;
+  gap: 18px;
+  padding-inline: var(--space-2);
+  animation: external-marquee 34s linear infinite;
+  will-change: transform;
+}
+
+.external-marquee:hover .external-marquee__track,
+.external-marquee:focus-within .external-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes external-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 9px));
+  }
 }
 
 .external-card {
@@ -584,6 +612,10 @@ p {
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.external-marquee .external-card {
+  width: clamp(280px, 30vw, 360px);
 }
 
 .external-card::after {
@@ -1094,13 +1126,13 @@ p {
   .note-banner,
   .card-grid,
   .card-grid--featured,
-  .external-grid:not(.external-grid--scroll),
+  .external-grid,
   .archive-list {
     grid-template-columns: 1fr;
   }
 
-  .external-grid--scroll {
-    grid-auto-columns: minmax(260px, 82vw);
+  .external-marquee .external-card {
+    width: min(82vw, 340px);
   }
 
   .search-slab {
