@@ -66,8 +66,11 @@
       if (!track) return;
 
       let isDragging = false;
+      let didDrag = false;
+      let isPointerDown = false;
       let startX = 0;
       let startScrollLeft = 0;
+      const dragThreshold = 6;
 
       const segmentWidth = () => Math.max(1, track.scrollWidth / 2);
 
@@ -122,21 +125,30 @@
 
       marquee.addEventListener("pointerdown", (event) => {
         if (event.button !== 0) return;
-        isDragging = true;
+        isPointerDown = true;
+        didDrag = false;
         startX = event.clientX;
         startScrollLeft = marquee.scrollLeft;
-        marquee.classList.add("is-pointer-active", "is-dragging");
-        marquee.setPointerCapture(event.pointerId);
+        marquee.classList.add("is-pointer-active");
       });
 
       marquee.addEventListener("pointermove", (event) => {
-        if (!isDragging) return;
+        if (!isPointerDown) return;
+        const distance = event.clientX - startX;
+        if (!isDragging && Math.abs(distance) < dragThreshold) return;
+        if (!isDragging) {
+          isDragging = true;
+          didDrag = true;
+          marquee.classList.add("is-dragging");
+          marquee.setPointerCapture(event.pointerId);
+        }
         event.preventDefault();
-        marquee.scrollLeft = startScrollLeft - (event.clientX - startX);
+        marquee.scrollLeft = startScrollLeft - distance;
         normalizeScroll();
       });
 
       const stopDragging = (event) => {
+        isPointerDown = false;
         if (!isDragging) return;
         isDragging = false;
         marquee.classList.remove("is-dragging");
@@ -149,10 +161,21 @@
           marquee.classList.remove("is-pointer-active");
           resumeAnimationFromScroll();
         }
+        window.setTimeout(() => {
+          didDrag = false;
+        }, 0);
       };
 
       marquee.addEventListener("pointerup", stopDragging);
       marquee.addEventListener("pointercancel", stopDragging);
+      marquee.addEventListener("click", (event) => {
+        if (!didDrag) return;
+        event.preventDefault();
+        event.stopPropagation();
+        window.setTimeout(() => {
+          didDrag = false;
+        }, 0);
+      }, true);
     });
   })();
 </script>
