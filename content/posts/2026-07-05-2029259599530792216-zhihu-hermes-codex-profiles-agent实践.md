@@ -1,7 +1,7 @@
 {
   "title": "用 Hermes 直接指挥本地 CodeX 写代码了, Profiles 搭建多Agent实践",
   "date": "2026-07-05",
-  "description": "哈喽，大家好，我是蝈蝈 很多人用 Hermes 的方式是一个 Agent 包揽所有事，但用久了会发现一个问题： Agent 的记忆越积越杂，行为越来越难预测。写代码时学到的项目习惯，和写日报时积累的表达偏好，全混在同一个 MEMORY.md 里——导致 Agent的记忆会变乱。…",
+  "description": "哈喽，大家好，我是 zr 很多人用 Hermes 的方式是一个 Agent 包揽所有事，但用久了会发现一个问题： Agent 的记忆越积越杂，行为越来越难预测。写代码时学到的项目习惯，和写日报时积累的表达偏好，全混在同一个 MEMORY.md 里——导致 Agent的记忆会变乱。…",
   "tags": [
     "AI",
     "Hermes",
@@ -10,13 +10,11 @@
   ],
   "source": "zhihu",
   "source_url": "https://zhuanlan.zhihu.com/p/2029259599530792216",
-  "author": "蝈蝈的AI笔记",
+  "author": "zr的AI笔记",
   "original_created_at": "2026-04-19 18:10:08"
 }
 
-> 本文整理自知乎专栏文章：[原文链接](https://zhuanlan.zhihu.com/p/2029259599530792216)。作者：蝈蝈的AI笔记。
-
-哈喽，大家好，我是蝈蝈
+哈喽，大家好，我是 zr
 
 很多人用 Hermes 的方式是一个 Agent 包揽所有事，但用久了会发现一个问题：**Agent 的记忆越积越杂，行为越来越难预测。**写代码时学到的项目习惯，和写日报时积累的表达偏好，全混在同一个 `MEMORY.md` 里——导致 Agent的记忆会变乱。
 
@@ -153,5 +151,3 @@ hermes update                    # 更新代码并同步所有 Profile 的内置
 coder 只管调度代码，assistant 只管日常，各自积累各自领域的 skill 和 memory。**用得越久，每个 Profile 越"专"，而不是越"乱"。** 这才是 多agent 的长处所在。
 
 ---
-
-如果这篇对你有帮助，帮忙**点赞关注，**帮助作者有动力继续更新！
