@@ -1,17 +1,7 @@
 {
   "title": "用 Hermes 直接指挥本地 CodeX 写代码了, Profiles 搭建多Agent实践",
   "date": "2026-07-05",
-  "description": "哈喽，大家好，我是 zr 很多人用 Hermes 的方式是一个 Agent 包揽所有事，但用久了会发现一个问题： Agent 的记忆越积越杂，行为越来越难预测。写代码时学到的项目习惯，和写日报时积累的表达偏好，全混在同一个 MEMORY.md 里——导致 Agent的记忆会变乱。…",
-  "tags": [
-    "AI",
-    "Hermes",
-    "CodeX",
-    "Agent"
-  ],
-  "source": "zhihu",
-  "source_url": "https://zhuanlan.zhihu.com/p/2029259599530792216",
-  "author": "zr的AI笔记",
-  "original_created_at": "2026-04-19 18:10:08"
+  "description": "哈喽，大家好，我是 zr 很多人用 Hermes 的方式是一个 Agent 包揽所有事，但用久了会发现一个问题： Agent 的记忆越积越杂，行为越来越难预测。写代码时学到的项目习惯，和写日报时积累的表达偏好，全混在同一个 MEMORY.md 里——导致 Agent的记忆会变乱。…"
 }
 
 哈喽，大家好，我是 zr
@@ -28,7 +18,7 @@
 
 ### 一、架构设计：两个 Profile，各司其职
 
-![image](https://pic2.zhimg.com/v2-390c20224653438351366ed5315e9c11_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_001_hermes-architecture-clean.png)
 
 **`coder` Profile** 是我们本次新增的, 用来处理代码任务调度员。它自己不写代码，只负责理解需求、拆解任务、调用本地 CodeX 或 Claude Code 执行，审查结果后汇报。这个设计的逻辑是：**CodeX 已经积累了大量专业 coding skill，是真正擅长写代码的工具，**Hermes 只需要做好"需求翻译"和"结果审查"就够了。
 
@@ -94,23 +84,23 @@ coder Profile 的 SOUL.md 核心是把"不自己写代码"这个行为倾向写�
 
 hermes连接本地codex完整调用链如下：
 
-![image](https://picx.zhimg.com/v2-e1c5969de7b18d14baff98fb09312827_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_002_hermes-sequence-clean.png)
 
 首先要为codex开通设备访问的权限, 在你的chatgpt里配置"安全"里面做开启, 如下图:
 
-![image](https://pic4.zhimg.com/v2-77d7a07f19867ae287a3cb38998ebb81_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_003_codex-security-clean.png)
 
 然后让你的coder agent 直接尝试连接你本地的codex, coder会给你一个验证码 和 openai的连接用来做配对, 我们点进去连接, 然后输入验证码就好
 
-![image](https://pica.zhimg.com/v2-288705765b8f035b4931b70ef73e21a4_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_004_hermes-login-clean.png)
 
 配置完成后，在飞书里向 coder Profile 发送一个编程任务，可以看到 Hermes 完整地执行了调度链路：先检查 CodeX 登录状态（`codex login status`），再通过 `codex exec resume` 把任务派发出去，等待执行，最后读取配置文件验证结果。
 
-![image](https://pic4.zhimg.com/v2-58e166b26973d8152854259327ca312b_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_005_hermes-execution-clean.png)
 
 执行结果显示：CodeX APP里可以看到新建了执行会话，目标任务完成，smoke 验证通过; 而Hermes 全程没有自己生成代码，只做了调度和验证。到此, Hermes 与本地 CodeX链路打通。
 
-![image](https://picx.zhimg.com/v2-a86d975c34cdcfeceb9c5f728a1deda3_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_006_codex-interactive-clean.png)
 
 ---
 
@@ -134,7 +124,7 @@ hermes update                    # 更新代码并同步所有 Profile 的内置
 
 但有一类需求会打破这个模式：**当一个任务需要多个 Profile 按顺序协作完成的时候。** 比如这样一条流水线:
 
-![image](https://pic2.zhimg.com/v2-bf215a8e29c5374b452c56d36e30e82d_r.jpg)
+![image](/imported/posts/2026-07-05-2029259599530792216-zhihu-hermes-codex-profiles-agent实践/images/img_007_orchestrator-flow-clean.png)
 
 这种**有依赖关系的多角色流水线，**才真正需要一个 orchestrator Profile 来统筹调度。
 
