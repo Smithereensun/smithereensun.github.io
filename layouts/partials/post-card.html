@@ -1,10 +1,9 @@
 <a class="post-card" href="{{ .RelPermalink }}" data-search-item data-search-title="{{ .Title | lower }}">
-  <div class="post-card__meta">
-    {{ if and (ne .Site.Params.showPostDates false) (ne .Params.has_date false) }}
+  {{ if and (ne .Site.Params.showPostDates false) (ne .Params.has_date false) }}
+    <div class="post-card__meta">
       <span>{{ .Date.Format "2006-01-02" }}</span>
-    {{ end }}
-    <span>{{ .ReadingTime }} min read</span>
-  </div>
+    </div>
+  {{ end }}
   <h3>{{ .Title }}</h3>
   <p>{{ .Summary | plainify | truncate 140 }}</p>
   <div class="post-card__footer">
